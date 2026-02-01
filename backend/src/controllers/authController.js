@@ -5,14 +5,17 @@ import { Verifymail } from "../config/verifyEmail.js";
 
 export const register = async (req, res) => {
   try {
-   const { name, email, password, collegeId, semester, batch, course } = req.validatedBody;
+    const { name, email, password, collegeId, semester, batch, course } =
+      req.validatedBody;
 
-    const userExists = await userSchema.findOne({ 
-      $or: [{ email }, { collegeId }] 
+    const userExists = await userSchema.findOne({
+      $or: [{ email }, { collegeId }],
     });
 
     if (userExists) {
-      return res.status(400).json("User with this email or college ID already exists");
+      return res
+        .status(400)
+        .json("User with this email or college ID already exists");
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -120,21 +123,20 @@ export const login = async (req, res) => {
     }
 
     if (checkpassword && user.isverifed === true) {
+      const accessToken = jwt.sign(
+        { id: user._id },
+        process.env.ACCESS_SECRET,
+        {
+          expiresIn: "30days",
+        },
+      );
 
-
-      const accessToken = jwt.sign({ id: user._id }, process.env.ACCESS_SECRET, {
-        expiresIn: "30days",
-      });
-
-    
-     
       await user.save();
       return res.status(200).json({
-        success: true,
-        message: "User Logged in Successfully",
+        id: user._id,
         accessToken: accessToken,
-       
-        
+        name: user.name,
+        email: user.email,
       });
     }
   } catch (error) {

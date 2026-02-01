@@ -21,3 +21,19 @@ export const BodyValidate = (schema) => {
     next();
   };
 };
+
+export const validateParams = (schema) => (req, res, next) => {
+  const result = schema.safeParse(req.params);
+
+  if (!result.success) {
+    const errorMessages = result.error.issues.map(issue => issue.message);
+
+    return res.status(400).json({
+      message: 'Invalid route parameters',
+       errorMessages,
+    });
+  }
+  
+  req.validatedParams = result.data;
+  next();
+};

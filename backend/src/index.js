@@ -4,15 +4,17 @@ import express from "express"
 import { dbConnect } from "./config/db.js"
 import cors from "cors"
 import authroutes from "./routes/userRoutes.js"
+import proflieRoutes from "./routes/profileRoutes.js"
 
 
 const app = express()
 app.use(express.json())
 app.use(cors())
+app.use(express.urlencoded({ extended: true }));
 
 
 app.use("/auth",authroutes)
-
+app.use("/profile",proflieRoutes)
 dbConnect();
 
 const PORT = process.env.PORT || 9000;

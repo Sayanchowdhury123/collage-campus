@@ -17,7 +17,7 @@ export const Verifymail = async (token, email) => {
     text: `Hi! There, You have recently visited 
            our website and entered your email.
            Please follow the given link to verify your email
-           http://localhost:9001/auth/verify?token=${token} 
+           http://localhost:5173/verify?token=${token} 
            Thanks`
   };
 

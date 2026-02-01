@@ -29,7 +29,7 @@ const userschema = new mongoose.Schema(
     bio: {
       type: String,
     },
-    avatar: {
+    image: {
       type: String,
     },
     collegeId: {
@@ -50,6 +50,9 @@ const userschema = new mongoose.Schema(
     batch: {
       type: Number,
       required: true,
+    },
+    cloudinaryid: {
+      type: String,
     },
   },
   { timestamps: true },
