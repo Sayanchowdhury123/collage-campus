@@ -9,6 +9,7 @@ import LoginForm from './components/LoginForm'
 import Verifyemail from './components/Verifyemail'
 import Home from './pages/Home'
 import PrivateRoute from './components/Protected'
+import ProfilePage from './pages/Profile'
 
 function App() {
 
@@ -25,7 +26,7 @@ function App() {
 
           <Route element={<PrivateRoute />}>
             <Route path="/home" element={<Home />} />
-       
+            <Route path='/profile' element={<ProfilePage />} />
           </Route>
 
 

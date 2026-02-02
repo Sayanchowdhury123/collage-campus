@@ -1,9 +1,14 @@
 import User from "../models/User.js";
 import cloudinary from "../config/cloudinary.js";
 import { uploadToCloudinary } from "../config/cloudinary.js";
+import { isValidObjectId } from "mongoose";
 
 export const getprofile = async (req, res) => {
-  const { id } = req.validatedParams;
+  const { id } = req.params;
+
+  if (!isValidObjectId(id)) {
+    return res.status(400).json({ msg: "Invalid user ID" });
+  }
 
   try {
     if (req.user.id !== id) {
@@ -23,15 +28,17 @@ export const getprofile = async (req, res) => {
 export const EditProfile = async (req, res) => {
   try {
     const { bio, name, semester, batch, course } = req.validatedBody;
-    const { id } = req.validatedParams;
+    const { id } = req.params;
+
+    if (!isValidObjectId(id)) {
+      return res.status(400).json({ msg: "Invalid user ID" });
+    }
 
     if (req.user.id !== id) {
       return res.status(400).json({ msg: "unauthorized" });
     }
 
-    const user = await User.findOne({
-      _id: req.user._id,
-    });
+    const user = await User.findById(id);
 
     if (!user) {
       return res.status(404).json({ message: "user not found" });
@@ -64,30 +71,31 @@ export const EditProfile = async (req, res) => {
       fileldtoupdate.cloudinaryid = uploadResult.public_id;
 
     const exists = await User.findOneAndUpdate(
-      { _id: req.user._id },
+      { _id: id },
       { $set: fileldtoupdate },
       {
         new: true,
         runValidators: true,
       },
-    );
+    ).select("-password");
 
     if (!exists) {
       return res.status(404).json({
-        message: "movie does not exist",
+        message: "user does not exist",
       });
     }
 
     return res.status(201).json({
       user: {
         id: exists._id,
-        title: exists.title,
-        avatar: exists.avatar,
+        name: exists.name,
+        image: exists.image,
         cloudinaryid: exists.cloudinaryid,
       },
       message: " profile updated",
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       message: "Internal server error",
     });

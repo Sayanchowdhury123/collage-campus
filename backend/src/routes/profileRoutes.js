@@ -7,8 +7,8 @@ import upload from "../middleware/upload.js";
 
 const router = express.Router()
 
-router.get("/get/:id",Authmiddleware,validateParams(userIdParamSchema),getprofile)
-router.patch("/edit/:id",Authmiddleware,upload.single("image"),validateParams(userIdParamSchema),BodyValidate(editProfileZodschema),EditProfile)
+router.get("/get/:id",Authmiddleware,getprofile)
+router.patch("/edit/:id",Authmiddleware,upload.single("image"),BodyValidate(editProfileZodschema),EditProfile)
 
 
 export default router;

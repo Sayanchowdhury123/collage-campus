@@ -137,6 +137,7 @@ export const login = async (req, res) => {
         accessToken: accessToken,
         name: user.name,
         email: user.email,
+        image: user.image
       });
     }
   } catch (error) {

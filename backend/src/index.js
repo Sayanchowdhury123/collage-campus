@@ -15,6 +15,9 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/auth",authroutes)
 app.use("/profile",proflieRoutes)
+
+
+
 dbConnect();
 
 const PORT = process.env.PORT || 9000;
