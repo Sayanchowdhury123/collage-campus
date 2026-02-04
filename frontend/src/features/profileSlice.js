@@ -44,7 +44,7 @@ const profileSlice = createSlice({
     data: null,
     loading: false,
     error: null,
-    updateSuccess: false,
+   
   },
   reducers: {
   

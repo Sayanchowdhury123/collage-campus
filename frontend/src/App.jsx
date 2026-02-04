@@ -10,6 +10,8 @@ import Verifyemail from './components/Verifyemail'
 import Home from './pages/Home'
 import PrivateRoute from './components/Protected'
 import ProfilePage from './pages/Profile'
+import Updateprofile from './pages/Updateprofile'
+import Emailsent from './components/Emailsent'
 
 function App() {
 
@@ -23,10 +25,13 @@ function App() {
           <Route path='/register' element={<RegisterForm />} />
           <Route path='/login' element={<LoginForm />} />
           <Route path='/verify' element={<Verifyemail />} />
-
+          <Route path='/email/sent' element={<Emailsent/>} />
+          
           <Route element={<PrivateRoute />}>
             <Route path="/home" element={<Home />} />
             <Route path='/profile' element={<ProfilePage />} />
+            <Route path='/update/profile' element={<Updateprofile/>} />
+
           </Route>
 
 

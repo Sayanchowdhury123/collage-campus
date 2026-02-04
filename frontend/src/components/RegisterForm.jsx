@@ -42,7 +42,7 @@ export default function RegisterForm() {
             const res = await api.post("/auth/register", payload)
             toast.success(res.data?.message || "Registered successfully!");
             reset()
-            navigate("/login")
+            navigate("/email/sent")
         } catch (error) {
             console.error("Registration error:", error);
             const msg = error.response?.data?.message || "Something went wrong";
