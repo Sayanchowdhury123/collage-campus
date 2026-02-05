@@ -24,29 +24,27 @@ export default function RegisterForm() {
             name: '',
             email: '',
             password: '',
-            batch: '',
-            course: 'BCA',
-            semester: '',
-            collegeId: '',
+           
         }
     });
 
 
     const handleReg = async (data) => {
         try {
-            const payload = {
-                ...data,
-                semester: Number(data.semester),
-                batch: Number(data.batch),
-            };
-            const res = await api.post("/auth/register", payload)
-            toast.success(res.data?.message || "Registered successfully!");
+            // const payload = {
+            //     ...data,
+            //     semester: Number(data.semester),
+            //     batch: Number(data.batch),
+            // };
+            // const res = await api.post("/auth/register", payload)
+            // toast.success(res.data?.message || "Registered successfully!");
+            
+            navigate(`/form/fill`,{
+                state:{registerData:data}
+            })
             reset()
-            navigate("/email/sent")
         } catch (error) {
-            console.error("Registration error:", error);
-            const msg = error.response?.data?.message || "Something went wrong";
-            toast.error(msg);
+           console.log(error)
         }
     }
 
@@ -54,7 +52,7 @@ export default function RegisterForm() {
     return (
 
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{duration:0.5}} className='overflow-hidden'>
-            <form onSubmit={handleSubmit(handleReg)} className=" flex flex-col items-center text-sm mt-10 text-slate-800">
+            <form onSubmit={handleSubmit(handleReg)} className=" flex flex-col justify-center h-screen items-center text-sm text-slate-800">
 
                 <h1 className="text-4xl font-bold py-4 text-center">Register Form</h1>
 
@@ -81,36 +79,7 @@ export default function RegisterForm() {
                         {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
                     </div>
 
-                    <label htmlFor="batch" className="font-medium mt-4">Batch</label>
-                    <div className="flex items-center mt-2 mb-4 h-10 pl-3 border border-slate-300 rounded-full focus-within:ring-2 focus-within:ring-indigo-400 transition-all overflow-hidden">
-
-                        <input   {...register("batch", { valueAsNumber: true })}
-                            type="number"
-                            min="2020"
-                            max="2030" className="h-full px-2 w-full outline-none bg-transparent" placeholder="Enter Batch" name='batch' />
-                        {errors.batch && <p className="text-red-500 text-xs mt-1">{errors.batch.message}</p>}
-                    </div>
-
-                    <label htmlFor="College Id" className="font-medium mt-4">College Id</label>
-                    <div className="flex items-center mt-2 mb-4 h-10 pl-3 border border-slate-300 rounded-full focus-within:ring-2 focus-within:ring-indigo-400 transition-all overflow-hidden">
-
-                        <input type="text" {...register("collegeId")} className="h-full px-2 w-full outline-none bg-transparent" placeholder="Enter College Id" name='collegeId' />
-                        {errors.collegeId && <p className="text-red-500 text-xs mt-1">{errors.collegeId.message}</p>}
-                    </div>
-
-                    <label htmlFor="Course" className="font-medium mt-4">Course</label>
-                    <div className="flex items-center mt-2 mb-4 h-10 pl-3 border border-slate-300 rounded-full focus-within:ring-2 focus-within:ring-indigo-400 transition-all overflow-hidden">
-
-                        <input type="text" {...register("course")} className="h-full px-2 w-full outline-none bg-transparent" placeholder="Enter College Id" name='course' />
-                        {errors.course && <p className="text-red-500 text-xs mt-1">{errors.course.message}</p>}
-                    </div>
-
-                    <label htmlFor="Semester" className="font-medium mt-4">Semester</label>
-                    <div className="flex items-center mt-2 mb-4 h-10 pl-3 border border-slate-300 rounded-full focus-within:ring-2 focus-within:ring-indigo-400 transition-all overflow-hidden">
-
-                        <input type="text" min="1" max="8" {...register("semester", { valueAsNumber: true })} className="h-full px-2 w-full outline-none bg-transparent" placeholder="Enter Semester" name='semester' />
-                        {errors.semester && <p className="text-red-500 text-xs mt-1">{errors.semester.message}</p>}
-                    </div>
+                 
 
 
 

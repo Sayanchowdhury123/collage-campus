@@ -17,16 +17,53 @@ export const RegisterZodschema = z.object({
       passwordRegex,
       "Password must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number",
     ),
+});
+
+export const LoginZodschema = z.object({
+  email: z.email("Invalid format").toLowerCase(),
+  password: z.string("Password is required").trim(),
+});
+
+export const FormfillZodSchema = z.object({
   collegeId: z
     .string()
     .trim()
     .min(5, "College ID must be at least 5 characters"),
   semester: z.number().int().min(1).max(8),
   batch: z.number().int().min(2020).max(2030),
-  course: z.string().optional(),
+  institute: z.string().max(100, "Name must be less than 100 letters"),
+  course: z
+    .string()
+    .min(2, "Name must be atleast 2 letters")
+    .max(50, "Name must be less than 50 letters")
+    .optional(),
 });
 
-export const LoginZodschema = z.object({
+export const backendRegisterZodSchema = z.object({
+  name: z
+    .string("Name is required")
+    .trim()
+    .min(2, "Name must be atleast 2 letters")
+    .max(50, "Name must be less than 50 letters"),
   email: z.email("Invalid format").toLowerCase(),
-  password: z.string("Password is required").trim(),
+  password: z
+    .string("Password is required")
+    .trim()
+    .min(8, "Minimum 8 chartects required")
+    .regex(
+      passwordRegex,
+      "Password must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number",
+    ),
+  collegeId: z
+    .string()
+    .trim()
+    .min(5, "College ID must be at least 5 characters"),
+  semester: z.number().int().min(1).max(8),
+  batch: z.number().int().min(2020).max(2030),
+  institute: z.string().min(10,"Name must be atleast 10 letters").max(100, "Name must be less than 100 letters").trim().toLowerCase(),
+  course: z
+    .string()
+    .min(2, "Name must be atleast 2 letters")
+    .max(50, "Name must be less than 50 letters")
+    .optional(),
 });

@@ -5,11 +5,11 @@ import { Verifymail } from "../config/verifyEmail.js";
 
 export const register = async (req, res) => {
   try {
-    const { name, email, password, collegeId, semester, batch, course } =
+    const { name, email, password, collegeId, semester, batch, course ,institute} =
       req.validatedBody;
 
     const userExists = await userSchema.findOne({
-      $or: [{ email }, { collegeId }],
+      $or: [{ email }, { collegeId },{institute}],
     });
 
     if (userExists) {
@@ -29,6 +29,7 @@ export const register = async (req, res) => {
       semester,
       batch,
       course: course || "BCA",
+      institute,
     });
 
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {

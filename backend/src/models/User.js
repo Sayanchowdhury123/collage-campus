@@ -54,6 +54,10 @@ const userschema = new mongoose.Schema(
     cloudinaryid: {
       type: String,
     },
+    institute:{
+      type:String,
+      required:true,
+    }
  
   },
   { timestamps: true },
