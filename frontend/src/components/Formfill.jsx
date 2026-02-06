@@ -42,7 +42,6 @@ const Formfill = () => {
                 batch: Number(data.batch),
             };
 
-            console.log(payload)
             const res = await api.post("/auth/register", payload)
             toast.success(res.data?.message || "Registered successfully!");
 

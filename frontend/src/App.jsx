@@ -13,6 +13,7 @@ import ProfilePage from './pages/Profile'
 import Updateprofile from './pages/Updateprofile'
 import Emailsent from './components/Emailsent'
 import Formfill from './components/Formfill'
+import CreatePost from './pages/CreatePost'
 
 function App() {
 
@@ -28,10 +29,12 @@ function App() {
           <Route path='/verify' element={<Verifyemail />} />
           <Route path='/email/sent' element={<Emailsent/>} />
           <Route path='/form/fill' element={<Formfill/>} />
+          
           <Route element={<PrivateRoute />}>
             <Route path="/home" element={<Home />} />
             <Route path='/profile' element={<ProfilePage />} />
             <Route path='/update/profile' element={<Updateprofile/>} />
+            <Route path='/create/post' element={<CreatePost/>} />
 
           </Route>
 
