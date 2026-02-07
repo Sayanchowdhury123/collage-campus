@@ -4,21 +4,26 @@ const postschema = new mongoose.Schema(
   {
     content: {
       type: String,
-       required: true,
+      required: true,
       trim: true,
       minlength: 1,
       maxlength: 1000,
     },
     cover: {
       type: String,
-        default: "",
+      default: "",
     },
     creator: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-   
+    groupid: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Group",
+      default: null,
+    },
+
     likes: [
       {
         user: {
@@ -33,9 +38,9 @@ const postschema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    cid:{
-        type:String,
-    }
+    cid: {
+      type: String,
+    },
   },
   { timestamps: true },
 );

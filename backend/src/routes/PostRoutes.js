@@ -10,7 +10,7 @@ const router = express.Router()
 
 
 router.get("/getAll",Authmiddleware,QueryValidate(getQueryschema),getAllPosts)
-router.get("/posts",Authmiddleware,QueryValidate(getQueryschema),getUserPosts)
+router.get("/user",Authmiddleware,QueryValidate(getQueryschema),getUserPosts)
 router.post("/add",Authmiddleware,upload.single("cover"),BodyValidate(createPostSchema),addPost)
 router.patch("/update/:postid",Authmiddleware,upload.single("cover"),validateParams(postidschema),BodyValidate(updatePostSchema),editPost)
 router.delete("/del/:postid",Authmiddleware,validateParams(postidschema),delpost)

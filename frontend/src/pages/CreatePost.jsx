@@ -61,6 +61,7 @@ const CreatePost = () => {
 
             console.log(res.data)
             toast.success("post created successfully")
+            setPreviewAvatar(null)
             reset()
         } catch (error) {
             console.log(error)
@@ -74,67 +75,123 @@ const CreatePost = () => {
     };
 
     return (
-        <div>
+        <div className='h-screen w-full'>
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                className="max-w-2xl mx-auto my-35"
+            >
+
+                <div className="mb-6">
+                    <h1 className="text-2xl font-bold text-gray-900">Create New Post</h1>
+                    <p className="text-gray-600 text-sm mt-1">
+                        Share updates, resources, or announcements with your campus
+                    </p>
+                </div>
+
+                <motion.div
+                    
+                    className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden"
+                >
+                    <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-5">
 
 
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="max-w-2xl mx-auto p-6">
-                <h1 className="text-2xl font-bold mb-6">Create Post</h1>
+                        <div className="space-y-3">
+                            <label className="block text-sm font-medium text-gray-700">
+                                Attach Image (Optional)
+                            </label>
+
+                            <div className="flex items-center gap-4">
+                                {previewAvatar ? (
+                                    <motion.div
+                                        initial={{ scale: 0.9 }}
+                                        animate={{ scale: 1 }}
+                                        className="relative"
+                                    >
+                                        <img
+                                            src={previewAvatar}
+                                            alt="Preview"
+                                            className="w-16 h-16 rounded-lg object-cover border border-gray-300"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setPreviewAvatar(null);
+                                                setValue("cover", null);
+                                            }}
+                                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                                        >
+                                            ×
+                                        </button>
+                                    </motion.div>
+                                ) : (
+                                    <div className="w-16 h-16 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                )}
+
+                                <label className="cursor-pointer">
+                                    <span className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors shadow-sm">
+                                        {previewAvatar ? "Change Image" : "Upload Image"}
+                                    </span>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleAvatarChange}
+                                        className="hidden"
+                                    />
+                                </label>
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label htmlFor="content" className="block text-sm font-medium text-gray-700">
+                                What's on your mind?
+                            </label>
+                            <textarea
+                                id="content"
+                                {...register("content")}
+                                rows={4}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition outline-none resize-none"
+                                placeholder="Write your post here... (Max 1000 characters)"
+                            />
+                            {errors.content && (
+                                <p className="text-sm text-red-500 mt-1">{errors.content.message}</p>
+                            )}
+                            <p className="text-xs text-gray-500 text-right">
+                                {watch("content")?.length || 0}/1000
+                            </p>
+                        </div>
 
 
-
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-
-                    <div className="flex flex-col items-center mb-6">
-                        <img
-                            src={previewAvatar || "/default-avatar.png"}
-                            alt="Avatar"
-                            className="w-24 h-24 rounded-full object-cover mb-3 border-2 border-gray-200"
-                        />
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleAvatarChange}
-                            className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-                        />
-                    </div>
-
-
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Content</label>
-                        <textarea
-                            {...register("content")}
-                            type="text"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            placeholder="Enter content"
-                        ></textarea>
-                        {errors.content && <p className="mt-1 text-sm text-red-500">{errors.content.message}</p>}
-                    </div>
-
-
-
-
-
-
-                    <div className="pt-4">
                         <motion.button
-                            whileHover={{ scale: 1.03 }}
+                            whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             type="submit"
                             disabled={loading}
-                            className={`w-full py-2 px-4 rounded-md text-white ${loading ? "bg-gray-400" : "bg-indigo-600 hover:bg-indigo-700"
-                                } transition`}
+                            className={`w-full py-3 px-4 rounded-lg font-semibold text-white transition-all shadow-md ${loading
+                                ? "bg-indigo-400 cursor-not-allowed"
+                                : "bg-indigo-600 hover:bg-indigo-700"
+                                }`}
                         >
-                            {loading ? (<p className="">
-                                Saving...<span className="loading text-white loading-spinner loading-sm ml-2"></span>
-                            </p>) : (<p className="">
-                                Create Post
-                            </p>)}
-
+                            {loading ? (
+                                <span className="flex items-center justify-center">
+                                    Creating Post...
+                                    <span className="ml-2 loading loading-spinner loading-sm"></span>
+                                </span>
+                            ) : (
+                                "Publish Post"
+                            )}
                         </motion.button>
-                    </div>
-                </form>
+                    </form>
+                </motion.div>
             </motion.div>
         </div>
+
+
     )
 }
 

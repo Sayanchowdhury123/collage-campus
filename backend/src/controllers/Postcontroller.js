@@ -74,7 +74,7 @@ export const editPost = async (req, res) => {
     );
 
     res.status(200).json({
-      post: editpost,
+      data: editpost,
       message: "post updated",
     });
   } catch (error) {

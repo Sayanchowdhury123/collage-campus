@@ -14,6 +14,7 @@ import Updateprofile from './pages/Updateprofile'
 import Emailsent from './components/Emailsent'
 import Formfill from './components/Formfill'
 import CreatePost from './pages/CreatePost'
+import PostManage from './pages/PostManage'
 
 function App() {
 
@@ -35,7 +36,7 @@ function App() {
             <Route path='/profile' element={<ProfilePage />} />
             <Route path='/update/profile' element={<Updateprofile/>} />
             <Route path='/create/post' element={<CreatePost/>} />
-
+            <Route path='/user/post' element={<PostManage/>} />
           </Route>
 
 
