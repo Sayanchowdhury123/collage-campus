@@ -15,6 +15,8 @@ import Emailsent from './components/Emailsent'
 import Formfill from './components/Formfill'
 import CreatePost from './pages/CreatePost'
 import PostManage from './pages/PostManage'
+import UpdateModel from './components/UpdateModel'
+import Navbar from './components/Navbar'
 
 function App() {
 
@@ -23,8 +25,9 @@ function App() {
     <>
       <BrowserRouter>
         <Toaster />
+          <Navbar/>
         <Routes>
-
+       
           <Route path='/register' element={<RegisterForm />} />
           <Route path='/login' element={<LoginForm />} />
           <Route path='/verify' element={<Verifyemail />} />
@@ -37,6 +40,7 @@ function App() {
             <Route path='/update/profile' element={<Updateprofile/>} />
             <Route path='/create/post' element={<CreatePost/>} />
             <Route path='/user/post' element={<PostManage/>} />
+            <Route path='/update/post' element={<UpdateModel/>} />
           </Route>
 
 

@@ -24,8 +24,9 @@ export const BodyValidate = (schema) => {
 };
 
 export const validateParams = (schema) => (req, res, next) => {
+ 
   const result = schema.safeParse(req.params);
-
+     
   if (!result.success) {
     const errorMessages = result.error.issues.map((issue) => issue.message);
 

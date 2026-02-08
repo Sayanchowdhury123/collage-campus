@@ -88,6 +88,7 @@ export const editPost = async (req, res) => {
 export const delpost = async (req, res) => {
   try {
     const { postid } = req.validatedParams;
+   console.log(postid)
 
     const userid = req.user._id;
 
@@ -101,7 +102,7 @@ export const delpost = async (req, res) => {
     }
 
     const del = await Post.findOneAndDelete({
-      user: userid,
+      creator: userid,
       _id: postid,
     });
 

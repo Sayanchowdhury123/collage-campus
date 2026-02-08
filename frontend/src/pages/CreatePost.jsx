@@ -1,15 +1,27 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { createPostSchema } from '../../../backend/src/Validators/postvalidationschema';
 import api from '../axios';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
+import { useDispatch } from 'react-redux';
+import { updatePost } from '../features/PostSlice';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-const CreatePost = () => {
-    const [previewAvatar, setPreviewAvatar] = useState(null);
+const CreatePost = ({ type }) => {
+    const isUpdateModal = type === "update";
+    const dispatch = useDispatch()
+
     const [loading, setLoading] = useState(false)
+
+    const navigate = useNavigate()
+    const location = useLocation()
+    const { post } = location.state || {};
+    const [previewAvatar, setPreviewAvatar] = useState(isUpdateModal ? post?.cover : null);
+
+
 
     const {
         register,
@@ -27,6 +39,13 @@ const CreatePost = () => {
 
         }
     });
+
+    useEffect(() => {
+        if (isUpdateModal && post) {
+            reset({ content: post.content || '' });
+            // setValue('cover', null);
+        }
+    }, [isUpdateModal, post, reset, setValue]);
 
 
     const handleAvatarChange = (e) => {
@@ -51,21 +70,45 @@ const CreatePost = () => {
             if (avatarFile) {
                 formData.append("cover", avatarFile);
             }
-            console.log(formData)
-            const res = await api.post(`/post/add`, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
 
-                },
-            })
+            if (isUpdateModal) {
+                const result = await dispatch(
+                    updatePost({ postid: post._id, formData })
+                );
 
-            console.log(res.data)
-            toast.success("post created successfully")
+                if (updatePost.fulfilled.match(result)) {
+                    toast.success("Post updated successfully!");
+                   
+
+                } else {
+                    toast.error(result.payload || "Update failed");
+                }
+
+
+            } else {
+                const res = await api.post(`/post/add`, formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+
+                    },
+                })
+
+                
+                toast.success("post created successfully")
+            }
+
+            
+              setTimeout(() => {
+                    navigate("/user/post")
+                }, 500);
+
             setPreviewAvatar(null)
-            reset()
+            setValue("cover", null)
+            reset({ content: '' });
+
         } catch (error) {
             console.log(error)
-            toast.error("post creation failed")
+            toast.error("operation failed")
         } finally {
             setLoading(false)
         }
@@ -84,14 +127,14 @@ const CreatePost = () => {
             >
 
                 <div className="mb-6">
-                    <h1 className="text-2xl font-bold text-gray-900">Create New Post</h1>
+                    <h1 className="text-2xl font-bold text-gray-900">{isUpdateModal ? "Update Post" : "Create New Post"}</h1>
                     <p className="text-gray-600 text-sm mt-1">
                         Share updates, resources, or announcements with your campus
                     </p>
                 </div>
 
                 <motion.div
-                    
+
                     className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden"
                 >
                     <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-5">
@@ -166,26 +209,50 @@ const CreatePost = () => {
                             </p>
                         </div>
 
-
-                        <motion.button
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            type="submit"
-                            disabled={loading}
-                            className={`w-full py-3 px-4 rounded-lg font-semibold text-white transition-all shadow-md ${loading
-                                ? "bg-indigo-400 cursor-not-allowed"
-                                : "bg-indigo-600 hover:bg-indigo-700"
-                                }`}
-                        >
-                            {loading ? (
-                                <span className="flex items-center justify-center">
-                                    Creating Post...
-                                    <span className="ml-2 loading loading-spinner loading-sm"></span>
-                                </span>
+                        {
+                            isUpdateModal ? (
+                                <motion.button
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    type="submit"
+                                    disabled={loading}
+                                    className={`w-full py-3 px-4 rounded-lg font-semibold text-white transition-all shadow-md ${loading
+                                        ? "bg-indigo-400 cursor-not-allowed"
+                                        : "bg-indigo-600 hover:bg-indigo-700"
+                                        }`}
+                                >
+                                    {loading ? (
+                                        <span className="flex items-center justify-center">
+                                            Updating Post...
+                                            <span className="ml-2 loading loading-spinner loading-sm"></span>
+                                        </span>
+                                    ) : (
+                                        "Update Post"
+                                    )}
+                                </motion.button>
                             ) : (
-                                "Publish Post"
-                            )}
-                        </motion.button>
+                                <motion.button
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    type="submit"
+                                    disabled={loading}
+                                    className={`w-full py-3 px-4 rounded-lg font-semibold text-white transition-all shadow-md ${loading
+                                        ? "bg-indigo-400 cursor-not-allowed"
+                                        : "bg-indigo-600 hover:bg-indigo-700"
+                                        }`}
+                                >
+                                    {loading ? (
+                                        <span className="flex items-center justify-center">
+                                            Creating Post...
+                                            <span className="ml-2 loading loading-spinner loading-sm"></span>
+                                        </span>
+                                    ) : (
+                                        "Publish Post"
+                                    )}
+                                </motion.button>
+                            )
+                        }
+
                     </form>
                 </motion.div>
             </motion.div>

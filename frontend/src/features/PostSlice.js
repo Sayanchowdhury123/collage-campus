@@ -1,21 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../axios";
 
-
-
-
-
 export const fetchpost = createAsyncThunk(
   "post/fetchUserPosts",
-  async (_, {rejectWithValue}) => {
+  async (_, { rejectWithValue }) => {
     try {
-   
       const response = await api.get(`/post/user`);
-  
+
       return response.data;
-      
     } catch (error) {
-  
       return rejectWithValue(
         error.response?.data?.msg || "Failed to load posts",
       );
@@ -30,7 +23,6 @@ export const updatePost = createAsyncThunk(
       const response = await api.patch(`/post/update/${postid}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-           
         },
       });
       return response.data.data;
@@ -42,10 +34,9 @@ export const updatePost = createAsyncThunk(
   },
 );
 
-
 export const DeletePost = createAsyncThunk(
   "post/deletePost",
-  async ( postid,{ rejectWithValue }) => {
+  async (postid, { rejectWithValue }) => {
     try {
       const response = await api.delete(`/post/del/${postid}`);
       return postid;
@@ -63,11 +54,32 @@ const postSlice = createSlice({
     posts: null,
     loading: false,
     error: null,
-    pagination:null
-   
+    pagination: null,
+
+    showDeleteModal: false,
+    deletePostId: null,
+
+    showEditModal: false,
+    editPostId: null,
   },
   reducers: {
-  
+    openDeleteModal: (state, action) => {
+      state.showDeleteModal = true;
+      state.deletePostId = action.payload;
+    },
+    closeDeleteModal: (state) => {
+      state.showDeleteModal = false;
+      state.deletePostId = null;
+    },
+
+    openEditModal: (state, action) => {
+      state.showEditModal = true;
+      state.editPostId = action.payload;
+    },
+    closeEditModal: (state) => {
+      state.showEditModal = false;
+      state.editPostId = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -89,37 +101,40 @@ const postSlice = createSlice({
       .addCase(updatePost.pending, (state) => {
         state.loading = true;
         state.error = null;
-        
       })
       .addCase(updatePost.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload;
-        
+     
       })
       .addCase(updatePost.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      
       });
 
-
- builder
+    builder
       .addCase(DeletePost.pending, (state) => {
         state.loading = true;
         state.error = null;
-        
       })
       .addCase(DeletePost.fulfilled, (state, action) => {
         state.loading = false;
-        state.posts = state.posts.filter((p) => p._id !== action.payload)
-        
+        state.posts = state.posts.filter((p) => p._id !== action.payload);
+        state.deletePostId = null;
+        state.showDeleteModal = false;
       })
       .addCase(DeletePost.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      
+        state.deletePostId = null;
+        state.showDeleteModal = false;
       });
   },
 });
 
+export const {
+  openDeleteModal,
+  closeDeleteModal,
+  openEditModal,
+  closeEditModal,
+} = postSlice.actions;
 export default postSlice.reducer;
