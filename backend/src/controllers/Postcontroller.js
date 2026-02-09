@@ -88,7 +88,7 @@ export const editPost = async (req, res) => {
 export const delpost = async (req, res) => {
   try {
     const { postid } = req.validatedParams;
-   console.log(postid)
+    console.log(postid);
 
     const userid = req.user._id;
 
@@ -121,47 +121,12 @@ export const delpost = async (req, res) => {
   }
 };
 
-export const getAllPosts = async (req, res) => {
-  try {
-    const { limit, page } = req.ValidatedQuery;
-    const total = await Post.countDocuments({});
-    const query = { institute: req.user.institute };
-
-    const allPosts = await Post.find(query)
-      .limit(limit)
-      .skip((page - 1) * limit)
-      .lean();
-
-    if (allPosts.length === 0) {
-      return res.status(200).json({
-        message: "no data",
-        data: [],
-      });
-    }
-
-    res.status(200).json({
-      message: "posts fetched",
-      data: allPosts,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-      },
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      message: "Internal server error",
-    });
-  }
-};
 
 export const getUserPosts = async (req, res) => {
   try {
     const { limit, page } = req.ValidatedQuery;
     const total = await Post.countDocuments({});
-    const query = {creator: req.user._id};
+    const query = { creator: req.user._id };
 
     const allPosts = await Post.find(query)
       .limit(limit)
@@ -192,3 +157,31 @@ export const getUserPosts = async (req, res) => {
     });
   }
 };
+
+export const ToggleLike = async (req, res) => {
+  try {
+    const { postid, userid } = req.validatedParams;
+    if (userid !== req.user._id)
+      return res.status(401).json({ message: "not authorized" });
+
+    const post = await Post.findById(postid);
+    const likeExists = post.likes.some((l) => l.user === userid);
+    if (likeExists) {
+      post.likes = post.likes.filter((l) => l.user !== userid);
+    } else {
+      post.likes.push({ user: userid });
+    }
+
+    await post.save();
+
+    return res.status(200).json({ mesage: "like operation completed" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
+
+

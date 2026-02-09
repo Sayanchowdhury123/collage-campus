@@ -6,6 +6,7 @@ import cors from "cors"
 import authroutes from "./routes/userRoutes.js"
 import proflieRoutes from "./routes/profileRoutes.js"
 import postRoutes from "./routes/PostRoutes.js"
+import homeroutes from "./routes/Homeroutes.js"
 
 const app = express()
 app.use(express.json())
@@ -16,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/auth",authroutes)
 app.use("/profile",proflieRoutes)
 app.use("/post",postRoutes)
+app.use("/home",homeroutes)
 
 
 

@@ -17,6 +17,7 @@ import CreatePost from './pages/CreatePost'
 import PostManage from './pages/PostManage'
 import UpdateModel from './components/UpdateModel'
 import Navbar from './components/Navbar'
+import Detailed from './components/Detailed'
 
 function App() {
 
@@ -41,6 +42,7 @@ function App() {
             <Route path='/create/post' element={<CreatePost/>} />
             <Route path='/user/post' element={<PostManage/>} />
             <Route path='/update/post' element={<UpdateModel/>} />
+            <Route path='/post/:postid' element={<Detailed/>} />
           </Route>
 
 

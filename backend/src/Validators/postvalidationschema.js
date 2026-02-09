@@ -4,6 +4,7 @@ const objectIdRegex = /^[a-fA-F0-9]{24}$/;
 
 export const postidschema = z.object({
   postid: z.string().regex(objectIdRegex, "Invalid ID format"),
+  userid: z.string().regex(objectIdRegex, "Invalid userid format").optional(),
 });
 
 export const createPostSchema = z.object({

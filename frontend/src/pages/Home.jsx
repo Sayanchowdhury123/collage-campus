@@ -1,19 +1,66 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../features/authslice'
+import { useEffect } from 'react'
+import { fetchall } from '../features/HomeSlice'
+import Card from '../components/Card'
+import Loadingscrenn from '../components/Loadingscrenn'
+import { useRef } from 'react'
 const Home = () => {
-  
+  const { allposts, error, loading, h,pageloading } = useSelector((state) => state.home)
+  const { user } = useSelector((state) => state.auth)
+  const bottomref = useRef(null)
+
   const dispatch = useDispatch()
-     
-  const handlelogout = () => {
-    dispatch(logout())
-  }
+
+    useEffect(() => {
+        if (loading) return;
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting && h) {
+
+                dispatch(fetchall())
+            }
+        }, {
+            threshold: 1.0
+        })
+
+        if (bottomref.current) {
+            observer.observe(bottomref.current)
+        }
+
+        return () => {
+            if (bottomref.current) observer.unobserve(bottomref.current)
+        }
+    }, [loading, h])
+
+
+
 
   return (
-    <div>
-      <p>home</p>
-      <button onClick={handlelogout}>logout</button>
-      
+    <div className='space-y-3'>
+
+      <div className='mt-3'>
+        <p className='text-4xl font-semibold text-center'>Feed</p>
+      </div>
+
+      <div className=' h-screen w-full '>
+        <div className='space-y-6 '>
+          {
+            allposts?.map(post => (
+              <Card post={post} key={post?._id} />
+            ))
+          }
+
+          <div ref={bottomref} className="h-5" />
+          <div className="text-center ">
+            {loading && (<span className="loading loading-xl  loading-spinner"></span>)}
+
+            {!h && (<p className="font-sans text-xl font-semibold">No more posts</p>)}
+          </div>
+        </div>
+
+      </div>
+
     </div>
   )
 }
