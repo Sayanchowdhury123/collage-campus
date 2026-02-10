@@ -1,40 +1,45 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../features/authslice'
 import { useEffect } from 'react'
 import { fetchall } from '../features/HomeSlice'
 import Card from '../components/Card'
 import Loadingscrenn from '../components/Loadingscrenn'
+import { motion } from 'framer-motion'
 import { useRef } from 'react'
 const Home = () => {
-  const { allposts, error, loading, h,pageloading } = useSelector((state) => state.home)
+  const { allposts, error, loading, h } = useSelector((state) => state.home)
   const { user } = useSelector((state) => state.auth)
   const bottomref = useRef(null)
+  const [pageLoading, setPageLoading] = useState(false)
 
   const dispatch = useDispatch()
 
-    useEffect(() => {
-        if (loading) return;
-        const observer = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting && h) {
-
-                dispatch(fetchall())
-            }
-        }, {
-            threshold: 1.0
-        })
-
-        if (bottomref.current) {
-            observer.observe(bottomref.current)
-        }
-
-        return () => {
-            if (bottomref.current) observer.unobserve(bottomref.current)
-        }
-    }, [loading, h])
 
 
+ 
+  useEffect(() => {
+    if (loading) return;
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && h) {
 
+        dispatch(fetchall())
+      }
+    }, {
+      threshold: 1.0
+    })
+
+    if (bottomref.current) {
+      observer.observe(bottomref.current)
+    }
+
+    return () => {
+      if (bottomref.current) observer.unobserve(bottomref.current)
+    }
+  }, [loading, h])
+
+
+  if (pageLoading) return <Loadingscrenn />
 
   return (
     <div className='space-y-3'>
@@ -46,8 +51,11 @@ const Home = () => {
       <div className=' h-screen w-full '>
         <div className='space-y-6 '>
           {
-            allposts?.map(post => (
-              <Card post={post} key={post?._id} />
+            allposts?.map((post, i) => (
+              <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1, duration: 0.3 }} key={post._id} >
+                <Card post={post}  />
+              </motion.div>
+
             ))
           }
 

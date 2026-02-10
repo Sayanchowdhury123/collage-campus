@@ -17,7 +17,7 @@ import CreatePost from './pages/CreatePost'
 import PostManage from './pages/PostManage'
 import UpdateModel from './components/UpdateModel'
 import Navbar from './components/Navbar'
-import Detailed from './components/Detailed'
+import Detailed from './pages/Deatiled'
 
 function App() {
 

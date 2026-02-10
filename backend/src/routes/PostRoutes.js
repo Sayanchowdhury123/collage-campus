@@ -12,7 +12,7 @@ const router = express.Router()
 
 router.get("/user",Authmiddleware,QueryValidate(getQueryschema),getUserPosts)
 router.post("/add",Authmiddleware,upload.single("cover"),BodyValidate(createPostSchema),addPost)
-router.patch("/like/:postid/user/:userid",Authmiddleware,validateParams(postidschema),ToggleLike)
+router.patch("/like/:postid",Authmiddleware,validateParams(postidschema),ToggleLike)
 router.patch("/update/:postid",Authmiddleware,upload.single("cover"),validateParams(postidschema),BodyValidate(updatePostSchema),editPost)
 router.delete("/del/:postid",Authmiddleware,validateParams(postidschema),delpost)
 

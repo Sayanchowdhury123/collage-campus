@@ -35,7 +35,7 @@ export const validateParams = (schema) => (req, res, next) => {
       errorMessages,
     });
   }
-
+  
   req.validatedParams = result.data;
   next();
 };

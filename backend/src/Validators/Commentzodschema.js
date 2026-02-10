@@ -4,7 +4,7 @@ import {z} from "zod"
 const objectIdRegex = /^[a-fA-F0-9]{24}$/;
 
 export const commentparam = z.object({
-postid: z.string().regex(objectIdRegex, "Invalid ID format"),
+postid: z.string().regex(objectIdRegex, "Invalid ID format").optional(),
 commentid:z.string().regex(objectIdRegex, "Invalid ID format").optional(),
 
 })

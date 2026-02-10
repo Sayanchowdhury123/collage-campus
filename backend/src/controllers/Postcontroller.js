@@ -160,21 +160,20 @@ export const getUserPosts = async (req, res) => {
 
 export const ToggleLike = async (req, res) => {
   try {
-    const { postid, userid } = req.validatedParams;
-    if (userid !== req.user._id)
-      return res.status(401).json({ message: "not authorized" });
+    const { postid } = req.validatedParams;
+
 
     const post = await Post.findById(postid);
-    const likeExists = post.likes.some((l) => l.user === userid);
+    const likeExists = post.likes.some((l) => l.user?.toString() === req.user._id?.toString());
     if (likeExists) {
-      post.likes = post.likes.filter((l) => l.user !== userid);
+      post.likes = post.likes.filter((l) => l.user?.toString() !== req.user._id?.toString());
     } else {
-      post.likes.push({ user: userid });
+      post.likes.push({ user: req.user._id });
     }
 
     await post.save();
 
-    return res.status(200).json({ mesage: "like operation completed" });
+     res.status(200).json({ mesage: "like operation completed",likes:post.likes });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
