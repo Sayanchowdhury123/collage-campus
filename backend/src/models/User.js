@@ -54,11 +54,17 @@ const userschema = new mongoose.Schema(
     cloudinaryid: {
       type: String,
     },
-    institute:{
-      type:String,
-      required:true,
-    }
- 
+    institute: {
+      type: String,
+      required: true,
+    },
+    groups: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Group",
+        required: true,
+      },
+    ],
   },
   { timestamps: true },
 );

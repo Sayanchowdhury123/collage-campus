@@ -31,4 +31,15 @@ export const CoverUplaodToCloudinary = (buffer) => {
   });
 };
 
+export const CoverImageToCloudinary = (buffer) => {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader
+      .upload_stream({ folder: "coverimages" }, (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+      })
+      .end(buffer);
+  });
+};
+
 export default cloudinary;
