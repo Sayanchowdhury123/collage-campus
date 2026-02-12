@@ -14,15 +14,29 @@ postid:z.string().regex(objectIdRegex, "Invalid ID format").optional(),
 export const groupzodschema = z.object({
   name: z
     .string()
-    .min(2, "Post content is required")
-    .max(50, "Post cannot exceed 1000 characters")
+    .min(2, "name is required")
+    .max(50, "name cannot exceed 1000 characters")
     .trim(),
 
   description: z
     .string()
-    .min(10, "Post content is required")
-    .max(500, "Post cannot exceed 1000 characters")
+    .min(10, "description is required")
+    .max(500, "description cannot exceed 1000 characters")
     .trim(),
+});
+
+export const groupupdateschema = z.object({
+  name: z
+    .string()
+    .min(2, "name is required")
+    .max(50, "name cannot exceed 1000 characters")
+    .trim().optional(),
+
+  description: z
+    .string()
+    .min(10, "description is required")
+    .max(500, "description cannot exceed 1000 characters")
+    .trim().optional(),
 });
 
 

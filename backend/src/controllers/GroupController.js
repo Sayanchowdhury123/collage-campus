@@ -22,8 +22,13 @@ export const createGroup = async (req, res) => {
       institute: req.user.institute,
     });
 
+    const user = await User.findOne({_id:userid})
+    user.groups.push(newGroup._id)
+
+    await user.save()
+
     res.status(201).json({
-      Group: newGroup,
+      group: newGroup,
       message: "Group created",
     });
   } catch (error) {
@@ -84,7 +89,7 @@ export const EditGroup = async (req, res) => {
     );
 
     res.status(200).json({
-      data: editedGroup,
+      group: editedGroup,
       message: "group updated",
     });
   } catch (error) {
@@ -106,7 +111,10 @@ export const delgroup = async (req, res) => {
       _id: gid,
     });
 
-    if (exists.institute !== req.user.institute) {
+    
+
+ 
+    if (exists?.institute?.trim() !== req.user.institute?.trim()) {
       return res.status(403).json({ error: "Not your college" });
     }
     if (exists.cid) {
@@ -184,7 +192,7 @@ export const ToggleGroup = async (req, res) => {
     }
 
     await user.save();
-    res.json({ message: alreadyMember ? "Left group" : "Joined group" });
+    res.json({ message: alreadyMember ? "Left group" : "Joined group",userid:userId,group:user.groups});
   } catch (error) {
     console.error("ToggleGroup error:", error);
     res.status(500).json({ message: "Server error" });
@@ -259,24 +267,27 @@ export const RemoveGroupPost = async (req, res) => {
 
 export const getusergroups = async (req, res) => {
   try {
-    const { l, s } = req.ValidatedQuery;
-    const { gid } = req.validatedParams;
 
-    const groups = await User.find({
-      groupid: gid,
-    })
-      .sort({ createdAt: -1 })
-      .populate("groups", "name coverimage description");
+  
+    const user = await User.findOne({
+      _id:req.user._id
+    }).populate({
+    path: 'groups',
+    populate: {
+      path: 'admin',
+      select: 'name image'
+    }
+  });
+      
 
-    if (!groups) {
+    if (!user) {
       return res.status(400).json({ msg: "groups not found" });
     }
 
-    const pag = groups.slice(s, l + s);
 
     res.status(200).json({
-      groups: pag,
-      h: s + l < groups.length,
+      groups: user.groups,
+    
     });
   } catch (error) {
     console.log(error);

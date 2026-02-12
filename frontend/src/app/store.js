@@ -4,6 +4,7 @@ import authReducer,{hydrateAuth} from "../features/authslice";
 import profileReducer from "../features/profileSlice";
 import postSlice from "../features/PostSlice"
 import HomeSlice from "../features/HomeSlice"
+import GroupSlice from "../features/GroupSlice"
 
 
 export const store = configureStore({
@@ -11,7 +12,8 @@ export const store = configureStore({
     auth: authReducer,
     profile: profileReducer,
     post: postSlice,
-    home:HomeSlice
+    home:HomeSlice,
+    group:GroupSlice
   },
 });
 

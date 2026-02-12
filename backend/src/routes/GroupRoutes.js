@@ -8,7 +8,7 @@ import upload from "../middleware/upload.js"
 const router = express.Router()
 
 
-router.get("/get/:gid",Authmiddleware,validateParams(groupparam),QueryValidate(getPagschema),getusergroups)
+router.get("/get",Authmiddleware,getusergroups)
 router.get("/posts/:gid",Authmiddleware,validateParams(groupparam),QueryValidate(getPagschema),getgroupPosts)
 router.post("/create",Authmiddleware,upload.single("coverimage"),BodyValidate(groupzodschema),createGroup)
 router.patch("/update/:gid",Authmiddleware,upload.single("coverimage"),validateParams(groupparam),BodyValidate(groupzodschema),EditGroup)

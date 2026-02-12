@@ -6,7 +6,7 @@ import { deletegrp, closeDeleteGrpModal } from "../features/GroupSlice"
 
 
 
-export default function DeleteModal() {
+export default function DeleteGrpModal() {
 
     const dispatch = useDispatch()
     const { deletePostId } = useSelector((state) => state.post)
@@ -15,11 +15,11 @@ export default function DeleteModal() {
     const handleDelete = async () => {
 
 
-        if (deletePostId) {
-            const res = await dispatch(DeletePost(deletePostId))
+        if (deleteGrpId) {
+            const res = await dispatch(deletegrp(deleteGrpId))
 
-            if (DeletePost.fulfilled.match(res)) {
-                toast.success("post deleted")
+            if (deletegrp.fulfilled.match(res)) {
+                toast.success("group deleted")
             } else {
                 toast.error(res.payload || "deletion failed");
 
@@ -29,11 +29,9 @@ export default function DeleteModal() {
 
     }
 
-    const handleClose = () => {
-      
-            dispatch(closeDeleteModal())
-        
-    }
+ 
+
+
 
     return (
         <div className="fixed inset-0 z-40 min-h-full overflow-y-auto overflow-x-hidden transition flex items-center">
@@ -51,7 +49,7 @@ export default function DeleteModal() {
                                 className="text-xl font-bold tracking-tight"
                                 id="page-action.heading"
                             >
-                                Delete Post
+                                Delete Group
                             </h2>
                             <p className="text-gray-500">
                                 Are you sure you would like to do this?
@@ -69,7 +67,7 @@ export default function DeleteModal() {
 
                                 <button
                                     type="button"
-                                    onClick={() => handleClose}
+                                    onClick={() => dispatch(closeDeleteGrpModal())}
                                     className="inline-flex items-center justify-center py-1 gap-1 font-medium rounded-lg border transition-colors outline-none focus:ring-offset-2 focus:ring-2 focus:ring-inset dark:focus:ring-offset-0 min-h-9 px-4 text-sm text-gray-800 bg-white border-gray-300 hover:bg-gray-50 focus:ring-primary-600 focus:text-primary-600 focus:bg-primary-50 focus:border-primary-600 dark:bg-gray-800 dark:hover:bg-gray-700 dark:border-gray-600 dark:hover:border-gray-500 dark:text-gray-200 dark:focus:text-primary-400 dark:focus:border-primary-400 dark:focus:bg-gray-800"
                                 >
                                     <span className="flex items-center gap-1">

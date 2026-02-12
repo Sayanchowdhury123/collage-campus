@@ -18,6 +18,8 @@ import PostManage from './pages/PostManage'
 import UpdateModel from './components/UpdateModel'
 import Navbar from './components/Navbar'
 import Detailed from './pages/Deatiled'
+import Groups from './pages/Groups'
+import Creategroup from './components/CreateGroup'
 
 function App() {
 
@@ -43,6 +45,8 @@ function App() {
             <Route path='/user/post' element={<PostManage/>} />
             <Route path='/update/post' element={<UpdateModel/>} />
             <Route path='/post/:postid' element={<Detailed/>} />
+            <Route path='/groups' element={<Groups/>} />
+            <Route path='/add/group' element={<Creategroup/>} />
           </Route>
 
 
