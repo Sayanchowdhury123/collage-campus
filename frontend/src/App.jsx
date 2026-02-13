@@ -20,6 +20,9 @@ import Navbar from './components/Navbar'
 import Detailed from './pages/Deatiled'
 import Groups from './pages/Groups'
 import Creategroup from './components/CreateGroup'
+import ExploreGrp from './pages/ExploreGrp'
+import GroupDetails from './pages/GroupDetails'
+
 
 function App() {
 
@@ -47,6 +50,8 @@ function App() {
             <Route path='/post/:postid' element={<Detailed/>} />
             <Route path='/groups' element={<Groups/>} />
             <Route path='/add/group' element={<Creategroup/>} />
+            <Route path='/all/groups' element={<ExploreGrp/>} />
+            <Route path='/group/:gid' element={<GroupDetails/>} />
           </Route>
 
 

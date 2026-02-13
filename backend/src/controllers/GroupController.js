@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import cloudinary, {
   CoverImageToCloudinary,
   CoverUplaodToCloudinary,
@@ -12,7 +13,8 @@ export const createGroup = async (req, res) => {
 
     const userid = req.user._id;
     let uploadResult = await CoverImageToCloudinary(req.file.buffer);
-
+    const arr = [];
+    arr.push(userid);
     const newGroup = await Group.create({
       name,
       description,
@@ -20,12 +22,8 @@ export const createGroup = async (req, res) => {
       coverimage: uploadResult.secure_url,
       cid: uploadResult.public_id,
       institute: req.user.institute,
+      members: arr,
     });
-
-    const user = await User.findOne({_id:userid})
-    user.groups.push(newGroup._id)
-
-    await user.save()
 
     res.status(201).json({
       group: newGroup,
@@ -111,9 +109,6 @@ export const delgroup = async (req, res) => {
       _id: gid,
     });
 
-    
-
- 
     if (exists?.institute?.trim() !== req.user.institute?.trim()) {
       return res.status(403).json({ error: "Not your college" });
     }
@@ -174,31 +169,40 @@ export const ToggleGroup = async (req, res) => {
     const { gid } = req.validatedParams;
     const userId = req.user._id;
 
-    const group = await Group.findById(gid);
+    const group = await Group.findOne({_id:gid}).populate("admin","name image")
     if (!group) return res.status(404).json({ msg: "Group not found" });
     if (group.institute !== req.user.institute) {
       return res.status(403).json({ msg: "Invalid institute" });
     }
 
-    const user = await User.findById(userId);
-    const alreadyMember = user.groups.some(
-      (g) => g.toString() === gid.toString(),
+    
+    const alreadyMember = group.members.some(
+      (memberId) => memberId.toString() === userId.toString(),
     );
 
     if (alreadyMember) {
-      user.groups = user.groups.filter((g) => g.toString() !== gid.toString());
+     
+      group.members = group.members.filter(
+        (memberId) => memberId.toString() !== userId.toString(),
+      );
     } else {
-      user.groups.push(gid);
+    
+      group.members.push(userId);
     }
 
-    await user.save();
-    res.json({ message: alreadyMember ? "Left group" : "Joined group",userid:userId,group:user.groups});
+    await group.save();
+   
+
+    res.json({
+      message: alreadyMember ? "Left group" : "Joined group",
+      success: true,
+      updated:group
+    });
   } catch (error) {
     console.error("ToggleGroup error:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
-
 export const AddGroupPost = async (req, res) => {
   try {
     const { gid, postid } = req.validatedParams;
@@ -230,7 +234,7 @@ export const RemoveGroupPost = async (req, res) => {
     const { gid, postid } = req.validatedParams;
     const userid = req.user._id;
 
-     const group = await Group.findById(gid);
+    const group = await Group.findById(gid);
     if (!group) return res.status(404).json({ msg: "Group not found" });
     if (group.institute !== req.user.institute) {
       return res.status(403).json({ msg: "Invalid institute" });
@@ -253,7 +257,6 @@ export const RemoveGroupPost = async (req, res) => {
       return res.status(404).json({ msg: "not joined group" });
     }
 
-
     post.groupid = "";
     await post.save();
     res.status(200).json({ message: "group post removed" });
@@ -265,34 +268,62 @@ export const RemoveGroupPost = async (req, res) => {
   }
 };
 
-export const getusergroups = async (req, res) => {
+export const getAllgroups = async (req, res) => {
   try {
+    const groups = await Group.find({}).populate("admin", "name image");
 
-  
-    const user = await User.findOne({
-      _id:req.user._id
-    }).populate({
-    path: 'groups',
-    populate: {
-      path: 'admin',
-      select: 'name image'
-    }
-  });
-      
-
-    if (!user) {
+    if (!groups) {
       return res.status(400).json({ msg: "groups not found" });
     }
 
-
     res.status(200).json({
-      groups: user.groups,
-    
+      groups,
     });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
       message: "Internal server error",
     });
+  }
+};
+
+export const getadmingroups = async (req, res) => {
+  try {
+    const groups = await Group.find({
+      admin: req.user._id,
+    }).populate("admin", "name image");
+
+    if (!groups) {
+      return res.status(400).json({ msg: "groups not found" });
+    }
+
+    res.status(200).json({
+      groups,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
+export const getGroupMemberCount = async (req, res) => {
+  try {
+    const { gid } = req.validatedParams;
+    console.log(gid);
+    if (!mongoose.isValidObjectId(gid)) {
+      return res.status(400).json({ message: "Invalid group ID" });
+    }
+
+    const details = await Group.findOne({ _id: gid }).populate(
+      "admin",
+      "name image",
+    );
+    console.log(details);
+    res.json({ grp: details });
+  } catch (error) {
+    console.error("Get member count error:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };

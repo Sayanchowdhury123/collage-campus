@@ -25,15 +25,22 @@ const groupschema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    cid:{
-      type:String,
-      default:""
+    cid: {
+      type: String,
+      default: "",
     },
-      institute: {
+    institute: {
       type: String,
       required: true,
       trim: true,
     },
+    members: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+    ],
   },
   { timestamps: true },
 );

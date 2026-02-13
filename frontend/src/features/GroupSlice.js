@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../axios";
 import { store } from "../app/store";
 
- 
 const initialState = {
   data: null,
   loading: false,
@@ -17,13 +16,16 @@ const initialState = {
   groups: [],
   showDeleteModal: false,
   deleteGrpId: null,
+  allGroups:[],
+  members:[],
+  grp:{},
 };
 
 export const fetchgroups = createAsyncThunk(
   "group/fetchgroups",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get(`/group/get`);
+      const response = await api.get(`/group/admin`);
 
       return {
         groups: response.data.groups,
@@ -35,17 +37,35 @@ export const fetchgroups = createAsyncThunk(
   },
 );
 
-// export const fetchdetail = createAsyncThunk(
-//   "home/fetchdetail",
-//   async (postid, { rejectWithValue }) => {
-//     try {
-//       const response = await api.get(`/home/detailed/${postid}`);
-//       return response.data.post;
-//     } catch (error) {
-//       return rejectWithValue(error || "Failed to load posts");
-//     }
-//   },
-// );
+export const fetchAllgroups = createAsyncThunk(
+  "group/fetchAllgroups",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/group/all`);
+      console.log(response.data.groups)
+      return {
+        groups: response.data.groups,
+      };
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error || "Failed to load posts");
+    }
+  },
+);
+
+export const fetchGrpDetails = createAsyncThunk(
+  "group/fetchGrpDetails",
+  async (gid,{ rejectWithValue }) => {
+    try {
+      const response = await api.get(`/group/details/${gid}`);
+      console.log(response.data)
+      return response.data.grp;
+    } catch (error) {
+      console.log(error)
+      return rejectWithValue(error || "Failed to load posts");
+    }
+  },
+);
 
 // export const fetchcom = createAsyncThunk(
 //   "home/fetchcom",
@@ -113,13 +133,10 @@ export const editgrp = createAsyncThunk(
 
 export const togglegrp = createAsyncThunk(
   "group/togglegrp",
-  async (gid, { rejectWithValue }) => {
+  async ({gid,userid}, { rejectWithValue }) => {
     try {
       const response = await api.patch(`/group/toggle/${gid}`);
-      return {
-        groups: response.data.group,
-        userid: response.data.userid,
-      };
+      return response.data.updated;
     } catch (error) {
       console.log(error);
       return rejectWithValue(
@@ -175,38 +192,39 @@ const GroupSlice = createSlice({
         state.error = action.payload;
       });
 
-    // builder
-    //   .addCase(fetchdetail.pending, (state) => {
-    //     state.loading = true;
-    //     state.error = null;
+    builder
+      .addCase(fetchAllgroups.pending, (state) => {
+        state.loading = true;
+        state.error = null;
 
-    //   })
+      })
 
-    //   .addCase(fetchdetail.fulfilled, (state, action) => {
-    //     state.post = action.payload;
-    //     state.loading = false;
-    //   })
+      .addCase(fetchAllgroups.fulfilled, (state, action) => {
+         const { groups } = action.payload;
+        state.allGroups = groups;
+        state.loading = false;
+      })
 
-    //   .addCase(fetchdetail.rejected, (state, action) => {
-    //     state.loading = false;
-    //     state.error = action.payload;
-    //   });
+      .addCase(fetchAllgroups.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
 
-    // builder
-    //   .addCase(fetchcom.pending, (state) => {
-    //     state.loading = true;
-    //     state.error = null;
-    //   })
+    builder
+      .addCase(fetchGrpDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
 
-    //   .addCase(fetchcom.fulfilled, (state, action) => {
-    //     state.comments = action.payload;
-    //     state.loading = false;
-    //   })
+      .addCase(fetchGrpDetails.fulfilled, (state, action) => {
+        state.grp = action.payload;
+        state.loading = false;
+      })
 
-    //   .addCase(fetchcom.rejected, (state, action) => {
-    //     state.loading = false;
-    //     state.error = action.payload;
-    //   });
+      .addCase(fetchGrpDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
 
     builder
       .addCase(createGroup.pending, (state) => {
@@ -239,7 +257,7 @@ const GroupSlice = createSlice({
         state.error = action.payload;
         state.deleteGrpId = null;
         state.showDeleteModal = false;
-        state.loading=false;
+        state.loading = false;
       });
 
     builder
@@ -257,18 +275,13 @@ const GroupSlice = createSlice({
         state.error = action.payload;
       });
 
-
-
     builder
       .addCase(togglegrp.pending, (state) => {
         state.error = null;
       })
 
       .addCase(togglegrp.fulfilled, (state, action) => {
-        const {groups,userid} = action.payload;
-        state.groups = state.groups.map((g) =>
-          g._id === action.payload._id ? action.payload : g,
-        );
+        state.grp = action.payload;
       })
 
       .addCase(togglegrp.rejected, (state, action) => {

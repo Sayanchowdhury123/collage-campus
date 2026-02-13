@@ -1,28 +1,35 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { fetchgroups } from '../features/GroupSlice'
+import { fetchgroups, togglegrp } from '../features/GroupSlice'
 import { useRef } from 'react'
 import { motion } from 'framer-motion'
 import Loadingscrenn from '../components/Loadingscrenn'
 import DeleteModal from '../components/DeleteModal'
 import { openDeleteModal } from '../features/GroupSlice'
 import DeleteGrpModal from '../components/Deletegrpmodal'
+import toast from 'react-hot-toast'
+import { fetchProfile } from '../features/profileSlice'
 
 
 const Groups = () => {
     const navigate = useNavigate()
-    const { groups, h, loading, showDeleteModal ,deleteGrpId} = useSelector((state) => state.group)
+    const { groups, h, loading, showDeleteModal, deleteGrpId } = useSelector((state) => state.group)
     const dispatch = useDispatch()
-       const {data} = useSelector((state) => state.profile);
-       const {user} = useSelector((state) => state.auth);
-  
+    const { data } = useSelector((state) => state.profile);
+    const { user } = useSelector((state) => state.auth);
+ 
+ 
+   
+
     useEffect(() => {
         dispatch(fetchgroups())
+    
 
     }, [user.id])
 
+  
 
     if (loading) return <Loadingscrenn />
     return (
@@ -35,7 +42,7 @@ const Groups = () => {
                     className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4"
                 >
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">Your Groups</h1>
+                        <h1 className="text-3xl font-bold text-gray-900">Manage Groups</h1>
                         <p className="mt-1 text-gray-600">
                             Manage your campus communities and collaborations
                         </p>
@@ -89,9 +96,10 @@ const Groups = () => {
                                         <h3 className="text-xl font-bold text-gray-900 mb-2">{g.name}</h3>
                                         <p className="text-gray-600 line-clamp-2">{g.description}</p>
 
-                                        {
-                                            g?.admin?._id === user?.id && (
-                                                <div className="flex gap-3 mt-4">
+
+                                        <div className="flex gap-3 mt-4">
+                                            {g?.admin?._id === user?.id && (
+                                                <>
                                                     <motion.button
                                                         whileHover={{ scale: 1.05 }}
                                                         whileTap={{ scale: 0.95 }}
@@ -104,16 +112,21 @@ const Groups = () => {
                                                         whileHover={{ scale: 1.05 }}
                                                         whileTap={{ scale: 0.95 }}
                                                         className="flex-1 px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors text-sm font-medium"
-                                                        onClick={() => navigate("/add/group",{
-                                                            state: {g}
+                                                        onClick={() => navigate("/add/group", {
+                                                            state: { g }
                                                         })}
                                                     >
                                                         Edit
                                                     </motion.button>
-                                                </div>
 
-                                            )
-                                        }
+                                                </>
+                                            )}
+
+
+                                        </div>
+
+
+
 
                                     </div>
                                 </motion.div>
@@ -160,7 +173,7 @@ const Groups = () => {
 
 
 
-                {showDeleteModal && (<DeleteGrpModal/>)}
+                {showDeleteModal && (<DeleteGrpModal />)}
 
             </div>
         </div>
