@@ -22,11 +22,11 @@ const PostManage = () => {
 
     if (loading) return <Loadingscrenn />
 
-
+    console.log(posts)
     return (
-        <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6">
-            <div className="max-w-3xl mx-auto">
-               
+        <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 ">
+            <div className="max-w-3xl mx-auto mt-20">
+
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -38,7 +38,7 @@ const PostManage = () => {
                     </p>
                 </motion.div>
 
-         
+
                 {posts?.length > 0 ? (
                     <div className="space-y-6">
                         {posts.map((p) => (
@@ -50,7 +50,7 @@ const PostManage = () => {
                                 transition={{ duration: 0.3 }}
                                 className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
                             >
-                               
+
                                 {p.cover && (
                                     <div className="aspect-video w-full overflow-hidden">
                                         <img
@@ -61,16 +61,27 @@ const PostManage = () => {
                                     </div>
                                 )}
 
-                              
-                                <div className="p-5">
-                                    <p className="text-gray-800 leading-relaxed whitespace-pre-line">
-                                        {p.content}
-                                    </p>
 
-                                  
+                                <div className="p-5">
+                                    <div className='flex justify-between items-center'>
+                                        <p className="text-gray-800 leading-relaxed whitespace-pre-line">
+                                            {p.content}
+
+                                        </p>
+
+                                        {p?.groupid?._id && (
+                                            <p className="text-gray-800 font-bold leading-relaxed whitespace-pre-line"> {p.groupid.name} Group</p>
+                                        )}
+                                    </div>
+
+
+
                                     <p className="text-xs text-gray-500 mt-3">
                                         {new Date(p.createdAt).toLocaleDateString()}
                                     </p>
+
+
+
 
                                     <div className="flex gap-3 mt-4 pt-4 border-t border-gray-100">
                                         <motion.button
@@ -136,7 +147,7 @@ const PostManage = () => {
                     </motion.div>
                 )}
 
-           
+
                 {showDeleteModal && <DeleteModal />}
             </div>
         </div>

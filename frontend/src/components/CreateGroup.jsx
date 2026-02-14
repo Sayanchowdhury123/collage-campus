@@ -128,7 +128,7 @@ const Creategroup = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
-                className="max-w-2xl mx-auto my-11"
+                className="max-w-2xl mx-auto my-25"
             >
 
                 <div className="mb-6">

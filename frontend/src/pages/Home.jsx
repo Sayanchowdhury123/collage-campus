@@ -42,7 +42,7 @@ const Home = () => {
   if (pageLoading) return <Loadingscrenn />
 
   return (
-    <div className='space-y-3'>
+    <div className='space-y-3 mt-25  '>
 
       <div className='mt-3'>
         <p className='text-4xl font-semibold text-center'>Feed</p>

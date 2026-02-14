@@ -8,12 +8,12 @@ import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import { useDispatch } from 'react-redux';
 import { updatePost } from '../features/PostSlice';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-const CreatePost = ({ type }) => {
+const GroupCreatePost = ({ type }) => {
     const isUpdateModal = type === "update";
     const dispatch = useDispatch()
-
+    const { gid } = useParams()
     const [loading, setLoading] = useState(false)
 
     const navigate = useNavigate()
@@ -71,36 +71,26 @@ const CreatePost = ({ type }) => {
                 formData.append("cover", avatarFile);
             }
 
-            if (isUpdateModal) {
-                const result = await dispatch(
-                    updatePost({ postid: post._id, formData })
-                );
+            const res = await api.post("/post/add", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
 
-                if (updatePost.fulfilled.match(result)) {
-                    toast.success("Post updated successfully!");
-                   
-
-                } else {
-                    toast.error(result.payload || "Update failed");
-                }
-
-
-            } else {
-                const res = await api.post(`/post/add`, formData, {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-
-                    },
-                })
-
-                
-                toast.success("post created successfully")
+                },
+            })
+            const postid = res.data.post._id;
+            if (postid) {
+                const result = await api.patch(`/group/add/${gid}/post/${postid}`)
+                console.log(result.data.post)
+                toast.success("Group Post Added")
             }
 
-            
-              setTimeout(() => {
-                    navigate("/user/post")
-                }, 500);
+
+
+
+
+            setTimeout(() => {
+                navigate(`/group/${gid}`)
+            }, 500);
 
             setPreviewAvatar(null)
             setValue("cover", null)
@@ -118,7 +108,7 @@ const CreatePost = ({ type }) => {
     };
 
     return (
-        <div className='h-screen w-full '>
+        <div className='h-screen w-full'>
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -127,7 +117,7 @@ const CreatePost = ({ type }) => {
             >
 
                 <div className="mb-6">
-                    <h1 className="text-2xl font-bold text-gray-900">{isUpdateModal ? "Update Post" : "Create New Post"}</h1>
+                    <h1 className="text-2xl font-bold text-gray-900">{isUpdateModal ? "Update Group Post" : "Create Group New Post"}</h1>
                     <p className="text-gray-600 text-sm mt-1">
                         Share updates, resources, or announcements with your campus
                     </p>
@@ -262,4 +252,4 @@ const CreatePost = ({ type }) => {
     )
 }
 
-export default CreatePost
+export default GroupCreatePost;

@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { fetchGrpDetails, togglegrp } from '../features/GroupSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import Loadingscrenn from '../components/Loadingscrenn';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import { FaUsers } from "react-icons/fa";
+import GroupPosts from '../components/GroupPosts';
+
 
 const GroupDetails = () => {
     const dispatch = useDispatch()
-
+    const navigate = useNavigate()
     const { gid } = useParams();
 
     const { allGroups, loading, grp } = useSelector((state) => state.group)
@@ -23,7 +25,7 @@ const GroupDetails = () => {
     }, [gid])
 
 
-const isMember = grp?.members?.includes(user.id);
+    const isMember = grp?.members?.includes(user.id);
 
     const handleToggle = async (gid) => {
 
@@ -42,8 +44,8 @@ const isMember = grp?.members?.includes(user.id);
     if (loading) return <Loadingscrenn />
     return (
         <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6">
-            <div className="max-w-3xl mx-auto">
-               
+            <div className="max-w-4xl mx-auto mt-20">
+            
                 <motion.button
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -56,13 +58,12 @@ const isMember = grp?.members?.includes(user.id);
                     Back to Groups
                 </motion.button>
 
-          
+
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
+                    className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8"
                 >
-                   
                     <div className="h-48 overflow-hidden">
                         {grp?.coverimage ? (
                             <img
@@ -79,20 +80,17 @@ const isMember = grp?.members?.includes(user.id);
                         )}
                     </div>
 
-                   
                     <div className="p-6">
-                        <div className="flex flex-col sm:flex-row sm:items-start gap-6">
-                            {/* Main Info */}
+                        <div className="flex flex-col lg:flex-row lg:items-start gap-6">
                             <div className="flex-1">
                                 <h1 className="text-2xl font-bold text-gray-900 mb-2">{grp?.name}</h1>
                                 <p className="text-gray-600 mb-4 leading-relaxed">{grp?.description}</p>
 
                                 <div className="flex items-center gap-2 text-sm text-gray-500 mb-6">
-                                   <FaUsers/>
+                                    <FaUsers className="text-gray-400" />
                                     <span>{grp?.members?.length || 0} members</span>
                                 </div>
 
-                              
                                 <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                                     <img
                                         src={grp?.admin?.image || "/default-avatar.png"}
@@ -106,15 +104,14 @@ const isMember = grp?.members?.includes(user.id);
                                 </div>
                             </div>
 
-                         
-                            <div className="flex flex-col gap-3">
+                            <div className="flex flex-col gap-3 min-w-50">
                                 <motion.button
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                     onClick={() => handleToggle(grp._id)}
                                     className={`px-6 py-3 rounded-lg font-medium transition-colors ${isMember
-                                            ? "bg-red-600 hover:bg-red-700 text-white"
-                                            : "bg-indigo-600 hover:bg-indigo-700 text-white"
+                                        ? "bg-red-600 hover:bg-red-700 text-white"
+                                        : "bg-indigo-600 hover:bg-indigo-700 text-white"
                                         }`}
                                 >
                                     {isMember ? "Leave Group" : "Join Group"}
@@ -124,18 +121,26 @@ const isMember = grp?.members?.includes(user.id);
                                     <motion.button
                                         whileHover={{ scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
-                                        onClick={() => {/* Navigate to group feed */ }}
+                                        onClick={() => navigate(`/add/post/${gid}`)}
                                         className="px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-colors"
                                     >
-                                        Go to Group Feed
+                                        Create Post
                                     </motion.button>
                                 )}
                             </div>
                         </div>
                     </div>
                 </motion.div>
+
+
+                {isMember && (
+                    <GroupPosts gid={grp._id} />
+                )}
+
             </div>
         </div>
+
+
     )
 }
 

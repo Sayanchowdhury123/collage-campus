@@ -121,7 +121,6 @@ export const delpost = async (req, res) => {
   }
 };
 
-
 export const getUserPosts = async (req, res) => {
   try {
     const { limit, page } = req.ValidatedQuery;
@@ -129,8 +128,8 @@ export const getUserPosts = async (req, res) => {
     const query = { creator: req.user._id };
 
     const allPosts = await Post.find(query)
-      .limit(limit)
-      .skip((page - 1) * limit)
+      .sort({ createdAt: -1 })
+      .populate("groupid","name")
       .lean();
 
     if (allPosts.length === 0) {
@@ -162,18 +161,23 @@ export const ToggleLike = async (req, res) => {
   try {
     const { postid } = req.validatedParams;
 
-
     const post = await Post.findById(postid);
-    const likeExists = post.likes.some((l) => l.user?.toString() === req.user._id?.toString());
+    const likeExists = post.likes.some(
+      (l) => l.user?.toString() === req.user._id?.toString(),
+    );
     if (likeExists) {
-      post.likes = post.likes.filter((l) => l.user?.toString() !== req.user._id?.toString());
+      post.likes = post.likes.filter(
+        (l) => l.user?.toString() !== req.user._id?.toString(),
+      );
     } else {
       post.likes.push({ user: req.user._id });
     }
 
     await post.save();
 
-     res.status(200).json({ mesage: "like operation completed",likes:post.likes });
+    res
+      .status(200)
+      .json({ mesage: "like operation completed", likes: post.likes });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -181,6 +185,3 @@ export const ToggleLike = async (req, res) => {
     });
   }
 };
-
-
-

@@ -138,29 +138,16 @@ export const delgroup = async (req, res) => {
 
 export const getgroupPosts = async (req, res) => {
   try {
-    const { l, s } = req.ValidatedQuery;
     const { gid } = req.validatedParams;
-    const posts = await Post.find({
-      groupid: gid,
-    })
+
+    const posts = await Post.find({ groupid: gid })
       .sort({ createdAt: -1 })
       .populate("creator", "name image");
 
-    if (!posts) {
-      return res.status(400).json({ msg: "posts not found" });
-    }
-
-    const pag = posts.slice(s, l + s);
-
-    res.status(200).json({
-      posts: pag,
-      h: s + l < posts.length,
-    });
+    res.json({ posts });
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      message: "Internal server error",
-    });
+    console.error("Get group posts error:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -169,34 +156,33 @@ export const ToggleGroup = async (req, res) => {
     const { gid } = req.validatedParams;
     const userId = req.user._id;
 
-    const group = await Group.findOne({_id:gid}).populate("admin","name image")
+    const group = await Group.findOne({ _id: gid }).populate(
+      "admin",
+      "name image",
+    );
     if (!group) return res.status(404).json({ msg: "Group not found" });
     if (group.institute !== req.user.institute) {
       return res.status(403).json({ msg: "Invalid institute" });
     }
 
-    
     const alreadyMember = group.members.some(
       (memberId) => memberId.toString() === userId.toString(),
     );
 
     if (alreadyMember) {
-     
       group.members = group.members.filter(
         (memberId) => memberId.toString() !== userId.toString(),
       );
     } else {
-    
       group.members.push(userId);
     }
 
     await group.save();
-   
 
     res.json({
       message: alreadyMember ? "Left group" : "Joined group",
       success: true,
-      updated:group
+      updated: group,
     });
   } catch (error) {
     console.error("ToggleGroup error:", error);
@@ -208,13 +194,13 @@ export const AddGroupPost = async (req, res) => {
     const { gid, postid } = req.validatedParams;
     const userId = req.user._id;
 
-    const group = await Group.findById(gid);
+    const group = await Group.findOne({ _id: gid });
     if (!group) return res.status(404).json({ msg: "Group not found" });
     if (group.institute !== req.user.institute) {
       return res.status(403).json({ msg: "Invalid institute" });
     }
 
-    const post = await Post.findById(postid);
+    const post = await Post.findOne({ _id: postid });
     if (!post) return res.status(404).json({ msg: "Post not found" });
     if (post.creator.toString() !== userId.toString()) {
       return res.status(403).json({ msg: "Not your post" });
@@ -222,7 +208,7 @@ export const AddGroupPost = async (req, res) => {
 
     post.groupid = gid;
     await post.save();
-    res.json({ message: "Post added to group" });
+    res.json({ message: "Post added to group", post });
   } catch (error) {
     console.error("AddGroupPost error:", error);
     res.status(500).json({ message: "Server error" });
@@ -247,19 +233,20 @@ export const RemoveGroupPost = async (req, res) => {
 
     const post = await Post.findById(postid);
     if (!post) return res.status(404).json({ msg: "Post not found" });
-    if (post.creator.toString() !== userid.toString()) {
+    if (post.creator?.toString() !== userid?.toString()) {
       return res.status(403).json({ msg: "Not your post" });
     }
 
-    const alredyMember = user.groups.some((g) => g === gid);
+    const alredyMember = user.groups.some((g) => g?.toString() === gid?.toString());
 
     if (!alredyMember) {
       return res.status(404).json({ msg: "not joined group" });
     }
-
-    post.groupid = "";
-    await post.save();
-    res.status(200).json({ message: "group post removed" });
+    if (user.cid) {
+      await cloudinary.uploader.destroy(exists.cid, { resource_type: "image" });
+    }
+    await Post.findByIdAndDelete(postid);
+    res.status(200).json({ message: "group post deleted" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -320,7 +307,7 @@ export const getGroupMemberCount = async (req, res) => {
       "admin",
       "name image",
     );
-    console.log(details);
+
     res.json({ grp: details });
   } catch (error) {
     console.error("Get member count error:", error);

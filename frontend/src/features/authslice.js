@@ -1,52 +1,49 @@
-
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   user: null,
   loading: false,
-  
+  showSideBar: false,
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-   
+    setShowsidebar: (state) => {
+      state.showSideBar = state.showSideBar === false ? true : false;
+    },
+
     authStart: (state) => {
       state.loading = true;
-      
     },
-  
+
     authSuccess: (state, action) => {
       const { user } = action.payload;
       state.user = user;
       state.loading = false;
-      
+
       localStorage.setItem("campus-user", JSON.stringify(user));
-      
     },
-   
+
     logout: (state) => {
       state.user = null;
       localStorage.removeItem("campus-user");
-     
     },
-   
+
     authFailure: (state) => {
       state.loading = false;
-      
     },
-  
+
     hydrateAuth: (state) => {
       const user = localStorage.getItem("campus-user");
-      
+
       if (user) {
         state.user = JSON.parse(user);
-    
       }
     },
   },
 });
 
-export const { authStart, authSuccess, logout, authFailure, hydrateAuth } = authSlice.actions;
+export const { authStart, authSuccess, logout, authFailure, hydrateAuth,setShowsidebar } =authSlice.actions;
 export default authSlice.reducer;

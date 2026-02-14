@@ -21,13 +21,13 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-2xl mx-auto ">
       
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-10"
+          className="text-center mb-10 mt-10"
         >
           <h1 className="text-3xl font-bold text-gray-900">Your Profile</h1>
           <p className="mt-2 text-gray-600">Manage your campus identity</p>

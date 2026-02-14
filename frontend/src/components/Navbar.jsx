@@ -1,14 +1,15 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { setShowsidebar } from '../features/authslice'
 
 const Navbar = () => {
     const {user} = useSelector((state) => state.auth)
-   
+    const dispatch = useDispatch()
     const navigate = useNavigate()
     return (
         <div>
-            <div className="navbar bg-base-100 shadow-sm flex justify-between items-center px-5" >
+            <div className="navbar z-40 fixed top-0 bg-base-100 shadow-sm flex justify-between items-center px-5" >
                 <div className="" onClick={(e) => {
                    e.preventDefault()
                    navigate("/home")
@@ -18,7 +19,7 @@ const Navbar = () => {
                 <div className="flex gap-2">
                     
                     <div className="dropdown dropdown-end">
-                        <div  role="button" className="btn btn-ghost btn-circle avatar">
+                        <div  role="button" className="btn btn-ghost btn-circle avatar" onClick={() => dispatch(setShowsidebar())}>
                             <div className="w-10 rounded-full">
                                 <img
                                     alt="Tailwind CSS Navbar component"

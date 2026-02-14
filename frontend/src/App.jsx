@@ -22,42 +22,46 @@ import Groups from './pages/Groups'
 import Creategroup from './components/CreateGroup'
 import ExploreGrp from './pages/ExploreGrp'
 import GroupDetails from './pages/GroupDetails'
+import GroupCreatePost from './components/GroupCreatePost'
+import Sidebar from './components/Sidebar'
 
 
 function App() {
 
 
   return (
-    <>
+    <div className='relative'>
       <BrowserRouter>
         <Toaster />
-          <Navbar/>
+        <Navbar />
+        <Sidebar />
         <Routes>
-       
+
           <Route path='/register' element={<RegisterForm />} />
           <Route path='/login' element={<LoginForm />} />
           <Route path='/verify' element={<Verifyemail />} />
-          <Route path='/email/sent' element={<Emailsent/>} />
-          <Route path='/form/fill' element={<Formfill/>} />
-          
+          <Route path='/email/sent' element={<Emailsent />} />
+          <Route path='/form/fill' element={<Formfill />} />
+
           <Route element={<PrivateRoute />}>
             <Route path="/home" element={<Home />} />
             <Route path='/profile' element={<ProfilePage />} />
-            <Route path='/update/profile' element={<Updateprofile/>} />
-            <Route path='/create/post' element={<CreatePost/>} />
-            <Route path='/user/post' element={<PostManage/>} />
-            <Route path='/update/post' element={<UpdateModel/>} />
-            <Route path='/post/:postid' element={<Detailed/>} />
-            <Route path='/groups' element={<Groups/>} />
-            <Route path='/add/group' element={<Creategroup/>} />
-            <Route path='/all/groups' element={<ExploreGrp/>} />
-            <Route path='/group/:gid' element={<GroupDetails/>} />
+            <Route path='/update/profile' element={<Updateprofile />} />
+            <Route path='/create/post' element={<CreatePost />} />
+            <Route path='/user/post' element={<PostManage />} />
+            <Route path='/update/post' element={<UpdateModel />} />
+            <Route path='/post/:postid' element={<Detailed />} />
+            <Route path='/groups' element={<Groups />} />
+            <Route path='/add/group' element={<Creategroup />} />
+            <Route path='/all/groups' element={<ExploreGrp />} />
+            <Route path='/group/:gid' element={<GroupDetails />} />
+            <Route path='/add/post/:gid' element={<GroupCreatePost />} />
           </Route>
 
 
         </Routes>
       </BrowserRouter>
-    </>
+    </div>
   )
 }
 

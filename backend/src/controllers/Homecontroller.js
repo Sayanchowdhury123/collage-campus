@@ -5,7 +5,7 @@ export const getAllPosts = async (req, res) => {
   try {
     const { l, s } = req.ValidatedQuery;
 
-    const posts = await Post.find()
+    const posts = await Post.find({groupid:null})
       .sort({ createdAt: -1 })
       .populate("creator", "name image");
 
