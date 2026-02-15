@@ -42,4 +42,24 @@ export const CoverImageToCloudinary = (buffer) => {
   });
 };
 
+
+
+export const uploadResourceToCloudinary = (buffer, folder) => {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader
+      .upload_stream(
+        { 
+          folder: `campus-connect/resources/${folder}`,
+          resource_type: "auto",
+          allowed_formats: ["pdf", "ppt", "pptx", "doc", "docx", "txt", "png", "jpg", "jpeg"]
+        },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result);
+        }
+      )
+      .end(buffer);
+  });
+};
+
 export default cloudinary;

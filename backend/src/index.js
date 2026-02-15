@@ -8,6 +8,7 @@ import proflieRoutes from "./routes/profileRoutes.js"
 import postRoutes from "./routes/PostRoutes.js"
 import homeroutes from "./routes/Homeroutes.js"
 import grouproutes from "./routes/GroupRoutes.js"
+import ResourceRoutes from "./routes/ResourceRoutes.js"
 
 const app = express()
 app.use(express.json())
@@ -20,6 +21,7 @@ app.use("/profile",proflieRoutes)
 app.use("/post",postRoutes)
 app.use("/home",homeroutes)
 app.use("/group",grouproutes)
+app.use("/resource",ResourceRoutes)
 
 
 

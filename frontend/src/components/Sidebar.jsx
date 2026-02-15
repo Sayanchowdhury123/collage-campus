@@ -9,6 +9,7 @@ import { IoIosCreate } from "react-icons/io";
 import { FaUserGroup } from "react-icons/fa6";
 import { MdGroups } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
+import { GrResources } from "react-icons/gr";
 
 const Sidebar = () => {
     const { user, showSideBar } = useSelector((state) => state.auth)
@@ -148,6 +149,21 @@ const Sidebar = () => {
                         >
                             <CgProfile className='text-2xl' />
                             <span>Profile</span>
+                        </a>
+                    </li>
+
+
+                    <li onClick={(e) => {
+                        e.preventDefault()
+                        navigate("/resources")
+                        dispatch(setShowsidebar())
+                    }}>
+                        <a
+                            href="javascript:void(0)"
+                            className="text-white text-[15px] font-normal  flex gap-2 justify-start items-center hover:bg-gray-700 rounded px-4 py-2 transition-all"
+                        >
+                            <GrResources className='text-2xl' />
+                            <span>Resources</span>
                         </a>
                     </li>
                 </ul>

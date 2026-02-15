@@ -88,7 +88,7 @@ export const editPost = async (req, res) => {
 export const delpost = async (req, res) => {
   try {
     const { postid } = req.validatedParams;
-    console.log(postid);
+    
 
     const userid = req.user._id;
 

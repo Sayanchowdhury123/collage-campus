@@ -24,6 +24,8 @@ import ExploreGrp from './pages/ExploreGrp'
 import GroupDetails from './pages/GroupDetails'
 import GroupCreatePost from './components/GroupCreatePost'
 import Sidebar from './components/Sidebar'
+import ResourceUpload from './components/CreateResource'
+import YourResource from './pages/YourResource'
 
 
 function App() {
@@ -56,6 +58,8 @@ function App() {
             <Route path='/all/groups' element={<ExploreGrp />} />
             <Route path='/group/:gid' element={<GroupDetails />} />
             <Route path='/add/post/:gid' element={<GroupCreatePost />} />
+            <Route path='/resource/add' element={<ResourceUpload/>} />
+            <Route path='/resources' element={<YourResource/>} />
           </Route>
 
 
