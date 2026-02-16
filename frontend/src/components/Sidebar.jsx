@@ -155,7 +155,7 @@ const Sidebar = () => {
 
                     <li onClick={(e) => {
                         e.preventDefault()
-                        navigate("/resources")
+                        navigate("/resource/all")
                         dispatch(setShowsidebar())
                     }}>
                         <a

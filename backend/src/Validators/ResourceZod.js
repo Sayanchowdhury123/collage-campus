@@ -39,5 +39,5 @@ export const getResourceQuery = z.object({
     .positive("should be positive")
     .min(1, "should not be less than 1")
     .max(50)
-    .default(5),
+    .default(3),
 });

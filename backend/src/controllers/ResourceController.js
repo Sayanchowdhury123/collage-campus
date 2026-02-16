@@ -26,8 +26,6 @@ export const createResource = async (req, res) => {
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
         "doc",
       "text/plain": "txt",
-      "image/png": "image",
-      "image/jpeg": "image",
     };
 
     const fileType = fileTypeMap[req.file.mimetype];
@@ -78,7 +76,7 @@ export const downloadResource = async (req, res) => {
       return res.status(404).json({ message: "Resource not found" });
     }
 
-    res.redirect(resource.fileUrl);
+    res.json({fileUrl:resource.fileUrl});
   } catch (error) {
     console.error("Download error:", error);
     res.status(500).json({ message: "Download failed" });
@@ -87,10 +85,10 @@ export const downloadResource = async (req, res) => {
 
 export const upvoteResource = async (req, res) => {
   try {
-    const { resourceId } = req.validatedParams;
+    const { resourceid } = req.validatedParams;
     const userId = req.user._id;
 
-    const resource = await Resource.findById(resourceId);
+    const resource = await Resource.findById(resourceid);
     if (!resource)
       return res.status(404).json({ message: "Resource not found" });
 
@@ -99,18 +97,19 @@ export const upvoteResource = async (req, res) => {
     );
 
     if (alreadyUpvoted) {
-      await Resource.findByIdAndUpdate(resourceId, {
+      await Resource.findByIdAndUpdate(resourceid, {
         $pull: { upvotes: { user: userId } },
       });
     } else {
-      await Resource.findByIdAndUpdate(resourceId, {
+      await Resource.findByIdAndUpdate(resourceid, {
         $addToSet: { upvotes: { user: userId } },
       });
     }
 
-    const updatedResource = await Resource.findById(resourceId);
-    res.json({
-      upvotes: updatedResource.upvotes.length,
+     await resource.populate("uploader", "name image");
+   
+    res.status(200).json({
+      upvotes: resource,
       isUpvoted: !alreadyUpvoted,
     });
   } catch (error) {
@@ -242,6 +241,32 @@ export const editResource = async (req, res) => {
     res.status(200).json({
       data: resource,
       message: "resource updated",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
+export const ResourceDetails = async (req, res) => {
+  try {
+    const { resourceid } = req.validatedParams;
+
+    const data = await Resource.findOne({
+      _id: resourceid,
+      uploader: req.user._id,
+    }).populate("uploader", "name image");
+
+    console.log(data);
+
+    if (!data) {
+      return res.status(404).json({ msg: "data not found" });
+    }
+
+    res.status(200).json({
+      data,
     });
   } catch (error) {
     console.log(error);

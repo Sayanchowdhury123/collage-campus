@@ -26,6 +26,8 @@ import GroupCreatePost from './components/GroupCreatePost'
 import Sidebar from './components/Sidebar'
 import ResourceUpload from './components/CreateResource'
 import YourResource from './pages/YourResource'
+import ResourceList from './pages/Resources'
+import ResourceDetails from './pages/ResourceDetails'
 
 
 function App() {
@@ -60,6 +62,8 @@ function App() {
             <Route path='/add/post/:gid' element={<GroupCreatePost />} />
             <Route path='/resource/add' element={<ResourceUpload/>} />
             <Route path='/resources' element={<YourResource/>} />
+            <Route path='/resource/all' element={<ResourceList/>} />
+            <Route path='/resource/details/:resourceid' element={<ResourceDetails/>} />
           </Route>
 
 

@@ -28,13 +28,12 @@ const resourceUpload = multer({
       "application/msword",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       "text/plain",
-      "image/png",
-      "image/jpeg",
+    
     ];
 
     if (!allowedTypes.includes(file.mimetype)) {
       return cb(
-        new Error("Only PDF, PPT, DOC, TXT, and images allowed"),
+        new Error("Only PDF, PPT, DOC, TXT, allowed"),
         false,
       );
     }
