@@ -22,7 +22,7 @@ export const updateResourceSchema = z.object({
   subject: z.string().min(1).max(50).optional(),
   semester: z.number().int().min(1).max(8).optional(),
   course: z.string().min(1).max(50).optional(),
-  groupId: z.string().regex(objectIdRegex, "Invalid ID format").optional(),
+ 
 });
 
 export const getResourceQuery = z.object({

@@ -64,6 +64,8 @@ function App() {
             <Route path='/resources' element={<YourResource/>} />
             <Route path='/resource/all' element={<ResourceList/>} />
             <Route path='/resource/details/:resourceid' element={<ResourceDetails/>} />
+            <Route path='/user/resources' element={<YourResource/>} />
+            
           </Route>
 
 

@@ -17,28 +17,31 @@ const upload = multer({
 
 const MAX_FILE_SIZE = 25 * 1024 * 1024;
 
+// middleware/upload.js
 const resourceUpload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: MAX_FILE_SIZE },
+  limits: { fileSize: 25 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
-    const allowedTypes = [
-      "application/pdf",
-      "application/vnd.ms-powerpoint",
-      "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-      "application/msword",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      "text/plain",
+  
+    const allowedMimeTypes = [
+    
+      'application/pdf',
+      
+      'application/vnd.ms-powerpoint',     
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+      
+      'application/msword',                     
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
+    
+      'text/plain',                             
     
     ];
 
-    if (!allowedTypes.includes(file.mimetype)) {
-      return cb(
-        new Error("Only PDF, PPT, DOC, TXT, allowed"),
-        false,
-      );
+    if (!allowedMimeTypes.includes(file.mimetype)) {
+      return cb(new Error('Unsupported file type'), false);
     }
     cb(null, true);
-  },
+  }
 });
 
 export const uploadResource = resourceUpload.single("file");

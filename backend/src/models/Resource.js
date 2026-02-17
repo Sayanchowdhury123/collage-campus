@@ -15,7 +15,7 @@ const resourceSchema = new mongoose.Schema(
     },
 
     fileUrl: { type: String, required: true },
-    fileId: { type: String, required: true },
+    fileId: { type: String},
     fileType: {
       type: String,
       enum: ["pdf", "ppt", "doc", "txt", "image"],

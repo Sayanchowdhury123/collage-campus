@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../axios";
+import { use } from "react";
 
 export const fetchResources = createAsyncThunk(
   "resource/fetchResources",
@@ -40,6 +41,22 @@ export const fetchDetails = createAsyncThunk(
   },
 );
 
+export const userResource = createAsyncThunk(
+  "resource/userResource",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/resource/uploader`);
+
+      return response.data.resources;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch",
+      );
+    }
+  },
+);
+
 export const upvotes = createAsyncThunk(
   "resource/upvotes",
   async ({ resourceid, userid }, { rejectWithValue }) => {
@@ -61,11 +78,28 @@ export const downloadfile = createAsyncThunk(
   async (resourceid, { rejectWithValue }) => {
     try {
       const response = await api.get(`/resource/download/${resourceid}`);
-      console.log(response.data)
+
+      return response.data.downloads;
     } catch (error) {
       console.log(error);
       return rejectWithValue(
         error.response?.data?.message || "Failed to update profile",
+      );
+    }
+  },
+);
+
+export const deletefile = createAsyncThunk(
+  "resource/deletefile",
+  async (resourceid, { rejectWithValue }) => {
+    try {
+      const response = await api.delete(`/resource/delete/${resourceid}`);
+
+      return resourceid
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to delete resource",
       );
     }
   },
@@ -81,6 +115,7 @@ const resourceSlice = createSlice({
     page: 1,
     initialLoading: true,
     r: {},
+    userItems:[],
   },
   reducers: {
     resetResources: (state) => {
@@ -88,6 +123,9 @@ const resourceSlice = createSlice({
       state.page = 1;
       state.hasMore = true;
       state.error = null;
+    },
+    incDownload: (state) => {
+      state.r = { ...state.r, downloads: state.r.downloads + 1 };
     },
   },
   extraReducers: (builder) => {
@@ -155,23 +193,48 @@ const resourceSlice = createSlice({
         state.error = action.payload;
       });
 
-
-      
     builder
       .addCase(downloadfile.pending, (state) => {
-        
         state.error = null;
       })
-      .addCase(downloadfile.fulfilled, (state, action) => {
-        
-        
-      })
+      .addCase(downloadfile.fulfilled, (state, action) => {})
       .addCase(downloadfile.rejected, (state, action) => {
         state.loading = false;
-        
+      });
+
+
+
+       builder
+      .addCase(userResource.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(userResource.fulfilled, (state, action) => {
+        state.userItems = action.payload;
+        state.loading = false;
+      })
+      .addCase(userResource.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+
+
+
+    builder
+      .addCase(deletefile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deletefile.fulfilled, (state, action) => {
+        state.userItems = state.userItems.filter((u) => u._id !== action.payload)
+        state.loading = false;
+      })
+      .addCase(deletefile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
 
-export const { resetResources } = resourceSlice.actions;
+export const { resetResources,incDownload } = resourceSlice.actions;
 export default resourceSlice.reducer;

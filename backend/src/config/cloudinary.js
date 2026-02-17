@@ -1,5 +1,5 @@
-import dotenv from "dotenv"
-dotenv.config()
+import dotenv from "dotenv";
+dotenv.config();
 import { v2 as cloudinary } from "cloudinary";
 
 cloudinary.config({
@@ -7,7 +7,6 @@ cloudinary.config({
   api_key: process.env.CLOUD_API_KEY,
   api_secret: process.env.CLOUD_API_SECRET,
 });
-
 
 export const uploadToCloudinary = (buffer) => {
   return new Promise((resolve, reject) => {
@@ -42,21 +41,36 @@ export const CoverImageToCloudinary = (buffer) => {
   });
 };
 
+export const uploadResourceToCloudinary = (buffer, folder, mimetype) => {
+  const formatMap = {
+    "application/pdf": "pdf",
+    "application/vnd.ms-powerpoint": "ppt",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation":
+      "pptx",
+    "application/msword": "doc",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+      "docx",
+    "text/plain": "txt",
+  };
 
+  
+  const extension = formatMap[mimetype] || "bin";
+  const publicId = `resource_${Date.now()}.${extension}`;
 
-export const uploadResourceToCloudinary = (buffer, folder) => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader
       .upload_stream(
-        { 
+        {
           folder: `campus-connect/resources/${folder}`,
-          resource_type: "auto",
-          allowed_formats: ["pdf", "ppt", "pptx", "doc", "docx", "txt", "png", "jpg", "jpeg"]
+          resource_type: "raw",
+          type:"upload",
+          public_id: publicId,
+    
         },
         (error, result) => {
           if (error) return reject(error);
           resolve(result);
-        }
+        },
       )
       .end(buffer);
   });

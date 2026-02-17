@@ -1,19 +1,24 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { createResourceSchema } from "../../../backend/src/Validators/ResourceZod";
+import { createResourceSchema, updateResourceSchema } from "../../../backend/src/Validators/ResourceZod";
 import { useDispatch } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { motion } from "framer-motion";
 import api from "../axios";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const ResourceUpload = () => {
+    const location = useLocation()
+    const { resource } = location.state || {};
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false)
-    const [preview, setPreview] = useState('');
+
     const navigate = useNavigate()
+    const [preview, setPreview] = useState(resource?.fileUrl || '');
+
+
 
     const {
         register,
@@ -24,7 +29,7 @@ const ResourceUpload = () => {
         watch,
         reset
     } = useForm({
-        resolver: zodResolver(createResourceSchema),
+        resolver: zodResolver(resource ? updateResourceSchema : createResourceSchema),
         defaultValues: {
             title: '',
             subject: '',
@@ -36,9 +41,40 @@ const ResourceUpload = () => {
         }
     });
 
+    useEffect(() => {
+        if (resource) {
+            reset({
+                title: resource?.title || '', description: resource?.description || '', semester: resource?.semester || '',
+
+                course: resource?.course || '', subject: resource?.subject || ''
+            });
+
+        }
+    }, [resource, reset]);
 
     const handleFileChange = (e) => {
         const selectedFile = e.target.files[0];
+
+        const fileTypeMap = {
+            "application/pdf": "pdf",
+            "application/vnd.ms-powerpoint": "ppt",
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation":
+                "ppt",
+            "application/msword": "doc",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "doc",
+            "text/plain": "txt",
+        };
+
+        const fileType = fileTypeMap[selectedFile.type];
+        console.log(fileType)
+        if (!fileType) {
+            toast.error("not allowed format")
+            setFile(null)
+            return;
+        }
+
+
+
         if (selectedFile) {
             setFile(selectedFile);
 
@@ -48,59 +84,68 @@ const ResourceUpload = () => {
         }
     };
 
-    const Submit = async (data) => {
-        console.log(data)
-        setLoading(true)
+  const Submit = async (data) => {
+  setLoading(true);
+  
+  try {
+    if (resource) {
+     
+      if (file) {
         const formData = new FormData();
-        formData.append('file', file);
-        formData.append('title', data.title);
-        formData.append('subject', data.subject);
-        formData.append('semester', data.semester);
-        formData.append('description', data.description)
-        formData.append("course", data.course)
-
-
-
-        try {
-            const res = await api.post("/resource/upload", formData)
-            toast.success("resource uploaded")
-
-            setPreview('')
-            reset()
-            setTimeout(() => {
-                navigate("/resources")
-            }, 500);
-        } catch (error) {
-            console.log(error)
-            toast.error("operation failed")
-        } finally {
-            setLoading(false)
-
-
-        }
-
-
-    };
+        Object.entries(data).forEach(([key, value]) => {
+          formData.append(key, value);
+        });
+        formData.append('file',file);
+        await api.put(`/resource/edit/${resource?._id}`, formData);
+      } else {
+    
+        await api.put(`/resource/edit/${resource?._id}`, data);
+      }
+      toast.success("Resource updated");
+    } else {
+     
+      const formData = new FormData();
+      formData.append('file',file);
+      Object.entries(data).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+      await api.post("/resource/upload", formData);
+      toast.success("Resource uploaded");
+    }
+    
+  
+    reset();
+    setFile(null);
+    setPreview('');
+    navigate("/resources");
+    
+  } catch (error) {
+    console.error("Submit error:", error);
+    toast.error("Operation failed");
+  } finally {
+    setLoading(false);
+  }
+};
 
     return (
-        <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{duration:0.5}} className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6">
             <div className="max-w-2xl mx-auto mt-20">
-                
+
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900">Upload Study Material</h1>
+                    <h1 className="text-3xl font-bold text-gray-900">{resource ? "Update Resource" : "Upload Study Material"}</h1>
                     <p className="mt-2 text-gray-600">
                         Share notes, presentations, and resources with your campus community
                     </p>
                 </div>
 
-          
+
                 <motion.div
-                    
+
                     className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden"
                 >
                     <form onSubmit={handleSubmit(Submit)} className="p-6 space-y-6">
 
-                        {/* File Upload Section */}
+
                         <div className="space-y-2">
                             <label className="block text-sm font-medium text-gray-700">
                                 Study Material*
@@ -113,6 +158,7 @@ const ResourceUpload = () => {
                                     accept=".pdf,.ppt,.pptx,.doc,.docx,.txt,.png,.jpg,.jpeg"
                                     className="hidden"
                                     id="file-upload"
+
                                 />
 
                                 <label htmlFor="file-upload" className="cursor-pointer">
@@ -134,7 +180,7 @@ const ResourceUpload = () => {
                                                 Click to upload
                                             </p>
                                             <p className="text-sm text-gray-500">
-                                                PDF, PPT, DOC, TXT, PNG, JPG (Max 25MB)
+                                                PDF, PPT, DOC, TXT, (Max 25MB)
                                             </p>
                                         </div>
                                     )}
@@ -142,7 +188,7 @@ const ResourceUpload = () => {
                             </div>
                         </div>
 
-                       
+
                         <div className="space-y-2">
                             <label htmlFor="title" className="block text-sm font-medium text-gray-700">
                                 Title*
@@ -175,7 +221,7 @@ const ResourceUpload = () => {
                             )}
                         </div>
 
-                
+
                         <div className="space-y-2">
                             <label htmlFor="semester" className="block text-sm font-medium text-gray-700">
                                 Semester*
@@ -195,7 +241,7 @@ const ResourceUpload = () => {
                             )}
                         </div>
 
-                        
+
                         <div className="space-y-2">
                             <label htmlFor="subject" className="block text-sm font-medium text-gray-700">
                                 Subject*
@@ -212,7 +258,7 @@ const ResourceUpload = () => {
                             )}
                         </div>
 
-                   
+
                         <div className="space-y-2">
                             <label htmlFor="description" className="block text-sm font-medium text-gray-700">
                                 Description
@@ -229,30 +275,32 @@ const ResourceUpload = () => {
                             )}
                         </div>
 
-                       
+
                         <motion.button
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             type="submit"
                             disabled={loading}
                             className={`w-full py-3 px-4 rounded-lg font-semibold text-white transition-all shadow-md ${loading
-                                    ? "bg-indigo-400 cursor-not-allowed"
-                                    : "bg-indigo-600 hover:bg-indigo-700"
+                                ? "bg-indigo-400 cursor-not-allowed"
+                                : "bg-indigo-600 hover:bg-indigo-700"
                                 }`}
                         >
                             {loading ? (
                                 <span className="flex items-center justify-center">
-                                    Uploading Resource...
+                                    {resource ? "Updating Resource" : "Uploading Resource..."}
                                     <span className="ml-2 loading loading-spinner loading-sm"></span>
                                 </span>
                             ) : (
-                                "Upload Resource"
+                                <span>
+                                    {resource ? "Update Resource" : "Upload Resource"}
+                                </span>
                             )}
                         </motion.button>
                     </form>
                 </motion.div>
 
-          
+
                 <div className="mt-6 text-center text-sm text-gray-500">
                     <p>Supported formats: PDF, PowerPoint, Word, Text, Images</p>
                     <p>Max file size: 25MB</p>
