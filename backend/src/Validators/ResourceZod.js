@@ -27,6 +27,7 @@ export const updateResourceSchema = z.object({
 
 export const getResourceQuery = z.object({
   subject: z.string().min(1).max(50).optional(),
+  title: z.string().min(1).max(50).trim().toLowerCase().optional(),
   semester: z.coerce.number().int().min(1).max(8).optional(),
   course: z.string().min(1).max(50).optional(),
   page: z.coerce

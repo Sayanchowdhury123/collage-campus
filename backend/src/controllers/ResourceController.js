@@ -40,7 +40,6 @@ export const createResource = async (req, res) => {
     const filename = `${Date.now()}_${req.user._id}.${ext}`;
     const folder = `${req.user.institute}/${course}/sem${semester}`;
     const filePath = `${folder}/${filename}`;
-  
 
     const { data, error } = await supabase.storage
       .from("resources")
@@ -65,7 +64,7 @@ export const createResource = async (req, res) => {
       semester: parseInt(semester),
       course,
       fileType: ext,
-      fileId:filePath,
+      fileId: filePath,
       fileSize: req.file.size,
       fileUrl: publicUrl,
       uploader: req.user._id,
@@ -132,13 +131,15 @@ export const upvoteResource = async (req, res) => {
 
 export const getResources = async (req, res) => {
   try {
-    const { subject, semester, course, page, limit } = req.ValidatedQuery;
+    const { subject, semester, course, page, limit, title } =
+      req.ValidatedQuery;
     const skip = (page - 1) * limit;
 
     const query = { institute: req.user.institute };
     if (subject) query.subject = { $regex: subject, $options: "i" };
     if (semester) query.semester = semester;
     if (course) query.course = { $regex: course, $options: "i" };
+    if (title) query.title = { $regex: title, $options: "i" };
 
     const resources = await Resource.find(query)
       .sort({ createdAt: -1 })
@@ -198,8 +199,7 @@ export const deleteResource = async (req, res) => {
         message: "Already Deleted or Resource does not exist",
       });
     }
-  
-    console.log(del.fileId)
+
     if (del.fileId) {
       const oldPath = del.fileId;
       const { error: deleteError } = await supabase.storage
@@ -210,8 +210,6 @@ export const deleteResource = async (req, res) => {
         console.warn("Failed to delete old file:", deleteError.message);
       }
     }
-
-
 
     res.status(204).end();
   } catch (error) {
@@ -246,10 +244,9 @@ export const editResource = async (req, res) => {
       const ext = getResourceType(req.file.mimetype);
       const filename = `${Date.now()}_${req.user._id}.${ext}`;
       const filePath = `${folder}/${filename}`;
-     
+
       try {
         if (exists.fileId) {
-          
           const { error: deleteError } = await supabase.storage
             .from("resources")
             .remove([exists.fileId]);
@@ -317,6 +314,34 @@ export const ResourceDetails = async (req, res) => {
 
     res.status(200).json({
       data,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
+export const unique = async (req, res) => {
+  try {
+    const resources = await Resource.find({});
+
+    const uniqueSubjects = Array.from(
+      new Set(resources.map((r) => r.subject).values()),
+    );
+
+    const uniqueCourses = Array.from(
+      new Set(resources.map((r) => r.course).values())
+    ) 
+    
+    
+
+    // console.log(uniqueCourses,uniqueSubjects)
+
+    res.status(200).json({
+      subjects: uniqueSubjects,
+      courses: uniqueCourses,
     });
   } catch (error) {
     console.log(error);

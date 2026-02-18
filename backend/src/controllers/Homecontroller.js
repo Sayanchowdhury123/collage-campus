@@ -3,21 +3,36 @@ import Post from "../models/Post.js";
 
 export const getAllPosts = async (req, res) => {
   try {
-    const { l, s } = req.ValidatedQuery;
+    const { searchValue, sort, page, limit } = req.ValidatedQuery;
+    const skip = (page - 1) * limit;
 
-    const posts = await Post.find({groupid:null})
-      .sort({ createdAt: -1 })
+    let sortOrder = sort === "desc" ? -1 : 1;
+    const sortObj = { createdAt: sortOrder };
+
+    const query = {};
+    query.groupid = null;
+    if (searchValue) query.content = { $regex: searchValue, $options: "i" };
+
+    const posts = await Post.find(query)
+      .sort(sortObj)
+      .skip(skip)
+      .limit(limit)
       .populate("creator", "name image");
+
+    const total = await Post.countDocuments(query);
 
     if (!posts) {
       return res.status(400).json({ msg: "posts not found" });
     }
 
-    const pag = posts.slice(s, l + s);
-
     res.status(200).json({
-      posts: pag,
-      h: s + l < posts.length,
+      posts,
+      pagination: {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
     });
   } catch (error) {
     console.log(error);
@@ -33,7 +48,7 @@ export const getDetailed = async (req, res) => {
 
     const post = await Post.findOne({
       _id: postid,
-      creator:req.user._id
+      creator: req.user._id,
     })
       .sort({ createdAt: -1 })
       .populate("creator", "name image institute");
@@ -55,7 +70,6 @@ export const getDetailed = async (req, res) => {
 
 export const newComment = async (req, res) => {
   try {
-  
     const { postid } = req.validatedParams;
     const { message } = req.validatedBody;
 
@@ -63,11 +77,13 @@ export const newComment = async (req, res) => {
       owner: req.user._id,
       message,
       post: postid,
-    })
+    });
 
-     await newComment.populate('owner','name image');
-    
-    return res.status(201).json({ message: "new comment added",comment:newComment });
+    await newComment.populate("owner", "name image");
+
+    return res
+      .status(201)
+      .json({ message: "new comment added", comment: newComment });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -81,8 +97,6 @@ export const Editcomment = async (req, res) => {
     const { commentid } = req.validatedParams;
     const { message } = req.validatedBody;
 
-
-
     const fileldtoupdate = {};
     if (message !== undefined) fileldtoupdate.message = message;
 
@@ -95,7 +109,7 @@ export const Editcomment = async (req, res) => {
       },
     );
 
-    await comment.populate("owner","name image")
+    await comment.populate("owner", "name image");
 
     if (!comment) {
       return res.status(401).json({ message: "comment does not exist" });
@@ -113,7 +127,7 @@ export const Editcomment = async (req, res) => {
 export const delcomment = async (req, res) => {
   try {
     const { commentid } = req.validatedParams;
-    const exists = await Comment.find({_id:commentid})
+    const exists = await Comment.find({ _id: commentid });
 
     if (!exists) {
       return res.status(401).json({ message: "comment does not exist" });
@@ -132,23 +146,19 @@ export const delcomment = async (req, res) => {
 
 export const getComments = async (req, res) => {
   try {
-   
     const { postid } = req.validatedParams;
     const comments = await Comment.find({
       post: postid,
     })
       .sort({ createdAt: -1 })
-      .populate("owner","name image");
+      .populate("owner", "name image");
 
     if (!comments) {
       return res.status(400).json({ msg: "Blogs not found" });
     }
 
-    
-
     res.status(200).json({
       comments,
-
     });
   } catch (error) {
     console.log(error);

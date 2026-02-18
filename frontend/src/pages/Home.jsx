@@ -7,15 +7,18 @@ import Card from '../components/Card'
 import Loadingscrenn from '../components/Loadingscrenn'
 import { motion } from 'framer-motion'
 import { useRef } from 'react'
+import PostSearch from '../components/PostSearch'
 const Home = () => {
-  const { allposts, error, loading, h } = useSelector((state) => state.home)
+  const { allposts, error, loading, h ,page} = useSelector((state) => state.home)
   const { user } = useSelector((state) => state.auth)
   const bottomref = useRef(null)
   const [pageLoading, setPageLoading] = useState(false)
 
   const dispatch = useDispatch()
 
-
+useEffect(() => {
+  dispatch(fetchall({page}))
+},[])
 
  
   useEffect(() => {
@@ -23,7 +26,7 @@ const Home = () => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && h) {
 
-        dispatch(fetchall())
+        dispatch(fetchall({page:page+1}))
       }
     }, {
       threshold: 1.0
@@ -44,9 +47,12 @@ const Home = () => {
   return (
     <div className='space-y-3 mt-25  '>
 
+   
+
       <div className='mt-3'>
         <p className='text-4xl font-semibold text-center'>Feed</p>
       </div>
+      <PostSearch/>
 
       <div className=' h-screen w-full '>
         <div className='space-y-6 '>

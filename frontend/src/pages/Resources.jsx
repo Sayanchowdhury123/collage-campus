@@ -10,6 +10,7 @@ import { IoIosDocument } from "react-icons/io";
 import { BsFiletypeTxt } from "react-icons/bs";
 import { CiImageOn } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
+import ResourceSearch from "../components/ResourceSearch";
 
 
 const ResourceList = () => {
@@ -25,19 +26,7 @@ const ResourceList = () => {
     }, [filters?.subject, filters?.semester, filters?.course]);
 
 
-    // useEffect(() => {
-    //     if (!hasMore || loading) return;
-
-    //     const handleScroll = () => {
-
-    //         if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
-    //             dispatch(fetchResources({ page: items.length > 0 ? Math.floor(items.length / 10) + 1 : 2, ...filters }));
-    //         }
-    //     };
-
-    //     window.addEventListener('scroll', handleScroll);
-    //     return () => window.removeEventListener('scroll', handleScroll);
-    // }, [hasMore, loading, items.length]);
+    
 
     useEffect(() => {
         if (loading) return;
@@ -66,7 +55,8 @@ const ResourceList = () => {
     return (
         <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6">
             <div className="max-w-4xl mx-auto mt-20">
-
+               
+            
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -77,6 +67,8 @@ const ResourceList = () => {
                         Browse and download study materials shared by your campus community
                     </p>
                 </motion.div>
+
+                   <ResourceSearch/>
 
 
                 {items.length > 0 ? (

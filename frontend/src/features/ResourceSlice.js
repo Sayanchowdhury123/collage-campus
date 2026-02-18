@@ -5,7 +5,7 @@ import { use } from "react";
 export const fetchResources = createAsyncThunk(
   "resource/fetchResources",
   async (
-    { page, limit = 3, subject, semester, course },
+    { page, limit = 3, subject, semester, course,title},
     { rejectWithValue },
   ) => {
     try {
@@ -15,6 +15,7 @@ export const fetchResources = createAsyncThunk(
       if (subject) params.append("subject", subject);
       if (semester) params.append("semester", semester);
       if (course) params.append("course", course);
+      if(title) params.append("title",title)
 
       const response = await api.get(`/resource/get?${params.toString()}`);
       return response.data;
