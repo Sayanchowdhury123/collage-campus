@@ -19,17 +19,17 @@ const Groups = () => {
     const dispatch = useDispatch()
     const { data } = useSelector((state) => state.profile);
     const { user } = useSelector((state) => state.auth);
- 
- 
-   
+
+
+
 
     useEffect(() => {
         dispatch(fetchgroups())
-    
+
 
     }, [user.id])
 
-  
+
 
     if (loading) return <Loadingscrenn />
     return (
@@ -63,7 +63,7 @@ const Groups = () => {
                     <div className='h-[80vh]'>
                         <motion.div
 
-                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6  overflow-y-scroll " style={{ scrollbarWidth: "none" }}
+                            className="grid grid-cols-1  lg:grid-cols-2 gap-6  overflow-y-scroll " style={{ scrollbarWidth: "none" }}
                         >
                             {groups.map((g) => (
                                 <motion.div
@@ -100,6 +100,8 @@ const Groups = () => {
                                         <div className="flex gap-3 mt-4">
                                             {g?.admin?._id === user?.id && (
                                                 <>
+
+
                                                     <motion.button
                                                         whileHover={{ scale: 1.05 }}
                                                         whileTap={{ scale: 0.95 }}
@@ -119,8 +121,19 @@ const Groups = () => {
                                                         Edit
                                                     </motion.button>
 
+                                                    <motion.button
+                                                        whileHover={{ scale: 1.05 }}
+                                                        whileTap={{ scale: 0.95 }}
+                                                        className="flex-1 px-3 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors text-sm font-medium"
+                                                        onClick={() => navigate(`/group/${g._id}`)}
+                                                    >
+                                                        more details
+                                                    </motion.button>
+
                                                 </>
                                             )}
+
+
 
 
                                         </div>

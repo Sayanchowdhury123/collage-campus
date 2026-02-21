@@ -1,14 +1,14 @@
 import express from "express"
 import { Authmiddleware } from "../middleware/AuthMiddleware.js"
 import { BodyValidate, QueryValidate, validateParams } from "../middleware/validator.js"
-import { groupparam, groupzodschema } from "../Validators/GroupZod.js"
+import { getGroupQuery, groupparam, groupzodschema } from "../Validators/GroupZod.js"
 import { getPagschema } from "../Validators/Commentzodschema.js"
 import { AddGroupPost, createGroup, delgroup, EditGroup, getadmingroups, getAllgroups, getGroupMemberCount, getgroupPosts, RemoveGroupPost, ToggleGroup } from "../controllers/GroupController.js"
 import upload from "../middleware/upload.js"
 const router = express.Router()
 
 router.get("/admin",Authmiddleware,getadmingroups)
-router.get("/all",Authmiddleware,getAllgroups)
+router.get("/all",Authmiddleware,QueryValidate(getGroupQuery),getAllgroups)
 router.get("/details/:gid",Authmiddleware,validateParams(groupparam),getGroupMemberCount)
 router.get("/posts/:gid",Authmiddleware,validateParams(groupparam),getgroupPosts)
 router.post("/create",Authmiddleware,upload.single("coverimage"),BodyValidate(groupzodschema),createGroup)

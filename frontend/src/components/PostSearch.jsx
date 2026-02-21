@@ -54,7 +54,7 @@ const PostSearch = () => {
                     </div>
                 </div>
 
-                {/* Sort Section */}
+                
                 <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
                     <label className="block text-sm font-medium text-gray-700 whitespace-nowrap">
                         Sort by:

@@ -21,7 +21,7 @@ const initialState = {
   grp: {},
   postloading: false,
   groupPosts: [],
-  pageloading:false,
+  pageloading: false,
 };
 
 export const fetchgroups = createAsyncThunk(
@@ -42,10 +42,13 @@ export const fetchgroups = createAsyncThunk(
 
 export const fetchAllgroups = createAsyncThunk(
   "group/fetchAllgroups",
-  async (_, { rejectWithValue }) => {
+  async ({ sort, searchValue }, { rejectWithValue }) => {
     try {
-      const response = await api.get(`/group/all`);
-      console.log(response.data.groups);
+      const params = new URLSearchParams();
+      if (sort) params.append("sort", sort);
+      if (searchValue) params.append("searchValue", searchValue);
+      const response = await api.get(`/group/all?${params.toString()}`);
+
       return {
         groups: response.data.groups,
       };
@@ -71,9 +74,8 @@ export const fetchGrpDetails = createAsyncThunk(
 
 export const fetchGrpPosts = createAsyncThunk(
   "group/fetchGrpPosts",
-  async (gid,{ rejectWithValue }) => {
+  async (gid, { rejectWithValue }) => {
     try {
-     
       const response = await api.get(`/group/posts/${gid}`);
 
       return {
@@ -188,7 +190,7 @@ const GroupSlice = createSlice({
       })
       .addCase(fetchGrpPosts.fulfilled, (state, action) => {
         const { posts } = action.payload;
-           console.log(posts)
+        console.log(posts);
         state.groupPosts = posts;
         state.pageloading = false;
       })

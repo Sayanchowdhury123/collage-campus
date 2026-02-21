@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchAllgroups } from '../features/GroupSlice'
 import { motion } from 'framer-motion'
 import Loadingscrenn from '../components/Loadingscrenn'
 import { useNavigate } from 'react-router-dom'
+import GroupSearch from '../components/GroupSearch'
 
 
 const ExploreGrp = () => {
@@ -11,15 +12,27 @@ const ExploreGrp = () => {
   const { allGroups, loading } = useSelector((state) => state.group)
   const { user } = useSelector((state) => state.auth)
   const dispatch = useDispatch()
-const navigate = useNavigate()
+  const navigate = useNavigate()
+  const [searchValue, setSearchValue] = useState("");
+  const [sort, setSort] = useState("desc");
 
   useEffect(() => {
-    dispatch(fetchAllgroups())
-  }, [user.id])
+    const filter = {};
+    if (sort) filter.sort = sort;
+    if (searchValue.trim()) filter.searchValue = searchValue.trim();
+
+    const timeOut = setTimeout(() => {
+        dispatch(fetchAllgroups({ ...filter }));
+    }, 500);
+
+  
+
+    return () => clearTimeout(timeOut)
+  }, [searchValue, sort]);
 
 
 
-  if(loading) return <Loadingscrenn/>
+  if (loading) return <Loadingscrenn />
 
   return (
 
@@ -38,6 +51,10 @@ const navigate = useNavigate()
             </p>
           </div>
 
+          <GroupSearch searchValue={searchValue}
+            setSearchValue={setSearchValue}
+            sort={sort}
+            setSort={setSort} />
 
         </motion.div>
 
@@ -51,7 +68,7 @@ const navigate = useNavigate()
               {allGroups.map((g) => (
                 <motion.div
                   key={g._id}
-                  layout
+
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.3 }}
@@ -85,7 +102,7 @@ const navigate = useNavigate()
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         className="flex-1 px-3 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors text-sm font-medium"
-                       onClick={() => navigate(`/group/${g._id}`)}
+                        onClick={() => navigate(`/group/${g._id}`)}
                       >
                         more details
                       </motion.button>
@@ -131,7 +148,7 @@ const navigate = useNavigate()
 
 
 
-        
+
 
       </div>
     </div>

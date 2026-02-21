@@ -28,45 +28,52 @@ import ResourceUpload from './components/CreateResource'
 import YourResource from './pages/YourResource'
 import ResourceList from './pages/Resources'
 import ResourceDetails from './pages/ResourceDetails'
+import PublicLayout from './components/PublicLayout'
+import PrivateLayout from './components/PrivateLayout'
 
 
 function App() {
 
 
   return (
-    <div className='relative'>
+    <div className=''>
       <BrowserRouter>
         <Toaster />
-        <Navbar />
-        <Sidebar />
+
         <Routes>
 
-          <Route path='/register' element={<RegisterForm />} />
-          <Route path='/login' element={<LoginForm />} />
-          <Route path='/verify' element={<Verifyemail />} />
-          <Route path='/email/sent' element={<Emailsent />} />
-          <Route path='/form/fill' element={<Formfill />} />
+          <Route path="/register" element={<RegisterForm />} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/verify" element={<Verifyemail />} />
+          <Route path="/email/sent" element={<Emailsent />} />
+          <Route path="/form/fill" element={<Formfill />} />
 
-          <Route element={<PrivateRoute />}>
-            <Route path="/home" element={<Home />} />
-            <Route path='/profile' element={<ProfilePage />} />
-            <Route path='/update/profile' element={<Updateprofile />} />
-            <Route path='/create/post' element={<CreatePost />} />
-            <Route path='/user/post' element={<PostManage />} />
-            <Route path='/update/post' element={<UpdateModel />} />
-            <Route path='/post/:postid' element={<Detailed />} />
-            <Route path='/groups' element={<Groups />} />
-            <Route path='/add/group' element={<Creategroup />} />
-            <Route path='/all/groups' element={<ExploreGrp />} />
-            <Route path='/group/:gid' element={<GroupDetails />} />
-            <Route path='/add/post/:gid' element={<GroupCreatePost />} />
-            <Route path='/resource/add' element={<ResourceUpload/>} />
-            <Route path='/resources' element={<YourResource/>} />
-            <Route path='/resource/all' element={<ResourceList/>} />
-            <Route path='/resource/details/:resourceid' element={<ResourceDetails/>} />
-            <Route path='/user/resources' element={<YourResource/>} />
+
+          <Route element={
+            <PrivateRoute />
+          }>
             
-          </Route>
+              <Route path="/home" element={<PrivateLayout><Home /></PrivateLayout>} />
+              <Route path='/profile/:id' element={<PrivateLayout><ProfilePage /></PrivateLayout>} />
+              <Route path='/update/profile' element={<PrivateLayout><Updateprofile /></PrivateLayout>} />
+              <Route path='/create/post' element={<PrivateLayout><CreatePost /></PrivateLayout>} />
+              <Route path='/user/post' element={<PrivateLayout><PostManage /></PrivateLayout>} />
+              <Route path='/update/post' element={<PrivateLayout><UpdateModel /></PrivateLayout>} />
+              <Route path='/post/:postid' element={<PrivateLayout><Detailed /></PrivateLayout>} />
+              <Route path='/groups' element={<PrivateLayout><Groups /></PrivateLayout> }/>
+              <Route path='/add/group' element={<PrivateLayout><Creategroup /></PrivateLayout>} />
+              <Route path='/all/groups' element={<PrivateLayout><ExploreGrp /></PrivateLayout>} />
+              <Route path='/group/:gid' element={<PrivateLayout><GroupDetails /></PrivateLayout>} />
+              <Route path='/add/post/:gid' element={<PrivateLayout><GroupCreatePost /></PrivateLayout>} />
+              <Route path='/resource/add' element={<PrivateLayout><ResourceUpload /></PrivateLayout>} />
+              <Route path='/resources' element={<PrivateLayout><YourResource /></PrivateLayout>} />
+              <Route path='/resource/all' element={<PrivateLayout><ResourceList /></PrivateLayout>} />
+              <Route path='/resource/details/:resourceid' element={<PrivateLayout><ResourceDetails /></PrivateLayout>} />
+              <Route path='/user/resources' element={<PrivateLayout><YourResource /></PrivateLayout>} />
+            </Route>
+
+
+          
 
 
         </Routes>

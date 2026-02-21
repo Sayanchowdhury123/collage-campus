@@ -129,7 +129,7 @@ export const getUserPosts = async (req, res) => {
 
     const allPosts = await Post.find(query)
       .sort({ createdAt: -1 })
-      .populate("groupid","name")
+      .populate("groupid creator","name image")
       .lean();
 
     if (allPosts.length === 0) {

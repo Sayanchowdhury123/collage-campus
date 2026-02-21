@@ -237,7 +237,9 @@ export const RemoveGroupPost = async (req, res) => {
       return res.status(403).json({ msg: "Not your post" });
     }
 
-    const alredyMember = user.groups.some((g) => g?.toString() === gid?.toString());
+    const alredyMember = user.groups.some(
+      (g) => g?.toString() === gid?.toString(),
+    );
 
     if (!alredyMember) {
       return res.status(404).json({ msg: "not joined group" });
@@ -257,7 +259,22 @@ export const RemoveGroupPost = async (req, res) => {
 
 export const getAllgroups = async (req, res) => {
   try {
-    const groups = await Group.find({}).populate("admin", "name image");
+    const { sort, searchValue } = req.ValidatedQuery;
+
+    let sortOrder = sort === "desc" ? -1 : 1;
+    const sortObj = { createdAt: sortOrder };
+
+    const query = searchValue
+      ? {
+          $or: [
+            { name: { $regex: searchValue, $options: "i" } },
+
+            { institute: { $regex: searchValue, $options: "i" } },
+          ],
+        }
+      : {};
+
+    const groups = await Group.find(query).sort(sortObj).populate("admin", "name image");
 
     if (!groups) {
       return res.status(400).json({ msg: "groups not found" });
