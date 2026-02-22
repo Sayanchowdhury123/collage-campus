@@ -48,10 +48,7 @@ export const getDetailed = async (req, res) => {
 
     const post = await Post.findOne({
       _id: postid,
-      creator: req.user._id,
-    })
-      .sort({ createdAt: -1 })
-      .populate("creator", "name image institute");
+    }).populate("creator", "name image institute");
 
     if (!post) {
       return res.status(400).json({ msg: "posts not found" });

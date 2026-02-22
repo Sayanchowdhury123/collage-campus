@@ -19,7 +19,6 @@ const Deatiled = () => {
         }
     }, [postid])
 
-
     if (loading) return <Loadingscrenn />
 
     return (
@@ -54,7 +53,7 @@ const Deatiled = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
         >
-          <Comments postid={postid} />
+          <Comments postid={postid} post={post} />
         </motion.div>
 
        

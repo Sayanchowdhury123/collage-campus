@@ -30,7 +30,10 @@ const Card = ({ post }) => {
             </div>
 
           
-            <div className="p-4"     onClick={() => navigate(`/post/${post?._id}`)}>
+            <div className="p-4"   
+              onClick={() => navigate(`/post/${post?._id}`)}
+              
+              >
                
                 {post?.cover && (
                     <div className="mb-3 overflow-hidden rounded-lg">

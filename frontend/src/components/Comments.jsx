@@ -6,9 +6,10 @@ import { motion } from "framer-motion"
 import { CiEdit } from 'react-icons/ci'
 import { MdDelete } from 'react-icons/md'
 import { formatDistanceToNow } from "date-fns"
+import { socket } from '../services/socket'
 
 
-const Comments = ({ postid }) => {
+const Comments = ({ postid ,post}) => {
   const { comments } = useSelector((state) => state.home)
   const [text, setText] = useState("")
   const dispatch = useDispatch()
@@ -19,6 +20,13 @@ const Comments = ({ postid }) => {
   const add = async () => {
     if (text?.trim() !== "") {
       const result = await dispatch(addcomment({ postid, message: text }))
+
+      socket.emit("sendNotification", {
+        receiver: post?.creator?._id,
+        message: `💬 ${user?.name} commented your post ${post?.content}`,
+        senderid: user?.id,
+      })
+
       if (addcomment.fulfilled.match(result)) {
         toast.success("comment added")
         setText("")
@@ -85,8 +93,8 @@ const Comments = ({ postid }) => {
             onClick={isEdit ? edit : add}
             disabled={!text.trim()}
             className={`px-5 py-2.5 rounded-lg font-medium transition-colors ${!text.trim()
-                ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                : "bg-indigo-600 text-white hover:bg-indigo-700"
+              ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+              : "bg-indigo-600 text-white hover:bg-indigo-700"
               }`}
           >
             {isEdit ? "Update" : "Post"}

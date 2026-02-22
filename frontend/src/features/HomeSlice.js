@@ -47,6 +47,7 @@ export const fetchdetail = createAsyncThunk(
       const response = await api.get(`/home/detailed/${postid}`);
       return response.data.post;
     } catch (error) {
+      console.log(error)
       return rejectWithValue(error || "Failed to load posts");
     }
   },
