@@ -30,6 +30,7 @@ import ResourceList from './pages/Resources'
 import ResourceDetails from './pages/ResourceDetails'
 import PublicLayout from './components/PublicLayout'
 import PrivateLayout from './components/PrivateLayout'
+import Notifcations from './pages/Notifcations'
 
 
 function App() {
@@ -70,6 +71,7 @@ function App() {
               <Route path='/resource/all' element={<PrivateLayout><ResourceList /></PrivateLayout>} />
               <Route path='/resource/details/:resourceid' element={<PrivateLayout><ResourceDetails /></PrivateLayout>} />
               <Route path='/user/resources' element={<PrivateLayout><YourResource /></PrivateLayout>} />
+              <Route path='/notifications' element={<PrivateLayout><Notifcations/></PrivateLayout>} />
             </Route>
 
 

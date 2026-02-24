@@ -9,7 +9,7 @@ import { formatDistanceToNow } from "date-fns"
 import { socket } from '../services/socket'
 
 
-const Comments = ({ postid ,post}) => {
+const Comments = ({ postid, post }) => {
   const { comments } = useSelector((state) => state.home)
   const [text, setText] = useState("")
   const dispatch = useDispatch()
@@ -21,11 +21,14 @@ const Comments = ({ postid ,post}) => {
     if (text?.trim() !== "") {
       const result = await dispatch(addcomment({ postid, message: text }))
 
-      socket.emit("sendNotification", {
-        receiver: post?.creator?._id,
-        message: `💬 ${user?.name} commented your post ${post?.content}`,
-        senderid: user?.id,
-      })
+      if (user?.id !== post?.creator?._id) {
+        socket.emit("sendNotification", {
+          receiver: post?.creator?._id,
+          message: `💬 ${user?.name} commented your post ${post?.content}`,
+          senderid: user?.id,
+        })
+      }
+
 
       if (addcomment.fulfilled.match(result)) {
         toast.success("comment added")

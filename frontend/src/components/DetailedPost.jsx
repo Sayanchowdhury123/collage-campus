@@ -10,11 +10,13 @@ const DetailedPost = ({ post, comments }) => {
     const dispatch = useDispatch()
     const { user } = useSelector((state) => state.auth)
 
+       const isLiked = post?.likes.some((like) => like.user?.toString() === user.id?.toString())
+
     // console.log(user)
     const handleLike = () => {
 
         dispatch(liking(post._id))
-        if (user && post) {
+        if (user && post && !isLiked && user?.id !== post?.creator?._id) {
             socket.emit("sendNotification", {
                 receiver: post?.creator?._id,
                 message: `❤️ ${user?.name} liked your post ${post?.content}`,
@@ -28,7 +30,7 @@ const DetailedPost = ({ post, comments }) => {
 
 
 
-    const isLiked = post?.likes.some((like) => like.user?.toString() === user.id?.toString())
+ 
 
     return (
         <motion.div

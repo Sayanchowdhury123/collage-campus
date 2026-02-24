@@ -5,6 +5,8 @@ import postSlice from "../features/PostSlice";
 import HomeSlice from "../features/HomeSlice";
 import GroupSlice from "../features/GroupSlice";
 import resourceSlice from "../features/ResourceSlice";
+import SocketSlice from "../features/SocketSlice";
+
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +16,7 @@ export const store = configureStore({
     home: HomeSlice,
     group: GroupSlice,
     resource: resourceSlice,
+    socket:SocketSlice
   },
 });
 

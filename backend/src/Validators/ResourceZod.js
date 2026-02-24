@@ -42,3 +42,19 @@ export const getResourceQuery = z.object({
     .max(50)
     .default(3),
 });
+
+
+export const getNotificationQuery = z.object({
+
+  page: z.coerce
+    .number("must be integer")
+    .positive("should be positive")
+    .min(1, "should not be less than 1")
+    .default(1),
+  limit: z.coerce
+    .number("must be integer")
+    .positive("should be positive")
+    .min(1, "should not be less than 1")
+    .max(50)
+    .default(5),
+});

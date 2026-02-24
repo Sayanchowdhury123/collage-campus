@@ -13,7 +13,15 @@ const PostSearch = () => {
         if (sort) filter.sort = sort;
         if (searchValue.trim()) filter.searchValue = searchValue.trim();
 
-        dispatch(fetchall({ page: 1, ...filter }));
+       
+
+            const timeOut = setTimeout(() => {
+                 dispatch(fetchall({ page: 1, ...filter }));
+            }, 500);
+        
+          
+        
+            return () => clearTimeout(timeOut)
     }, [searchValue, sort, dispatch]);
 
     return (

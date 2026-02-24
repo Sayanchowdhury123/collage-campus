@@ -274,6 +274,8 @@ export const getAllgroups = async (req, res) => {
         }
       : {};
 
+      query.institute = req.user.institute;
+
     const groups = await Group.find(query).sort(sortObj).populate("admin", "name image");
 
     if (!groups) {

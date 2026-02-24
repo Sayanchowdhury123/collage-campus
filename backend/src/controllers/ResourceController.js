@@ -3,6 +3,7 @@ import { supabase } from "../utils/supabase.js";
 import cloudinary, {
   uploadResourceToCloudinary,
 } from "../config/cloudinary.js";
+import Notification from "../models/Notification.js";
 
 const getResourceType = (mimetype) => {
   const mimeMap = {
@@ -332,16 +333,47 @@ export const unique = async (req, res) => {
     );
 
     const uniqueCourses = Array.from(
-      new Set(resources.map((r) => r.course).values())
-    ) 
-    
-    
+      new Set(resources.map((r) => r.course).values()),
+    );
 
     // console.log(uniqueCourses,uniqueSubjects)
 
     res.status(200).json({
       subjects: uniqueSubjects,
       courses: uniqueCourses,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
+export const getNotifications = async (req, res) => {
+  try {
+    const { limit, page } = req.ValidatedQuery;
+    const skip = (page - 1) * limit;
+
+    const query = {
+      receiver: req.user._id,
+    };
+
+    const notifications = await Notification.find(query)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    const total = await Notification.countDocuments(query);
+
+    res.json({
+      notifications,
+      pagination: {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
     });
   } catch (error) {
     console.log(error);

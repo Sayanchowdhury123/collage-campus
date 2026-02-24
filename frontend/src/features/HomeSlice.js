@@ -131,6 +131,9 @@ const homeSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchall.pending, (state) => {
+        if(state.page === 1){
+          state.pageLoading=true
+        }
         state.loading = true;
         state.error = null;
       })
@@ -147,11 +150,13 @@ const homeSlice = createSlice({
         state.page = pagination.page;
         state.h = pagination.totalPages > state.page;
         state.loading = false;
+        state.pageLoading=false
      
       })
       .addCase(fetchall.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.pageLoading=false
       });
 
     builder

@@ -11,6 +11,7 @@ import { MdGroups } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { GrResources } from "react-icons/gr";
 import { TiGroupOutline } from "react-icons/ti";
+import { FaBell, FaCheckCircle, FaExclamationTriangle, FaInfoCircle } from 'react-icons/fa';
 
 const Sidebar = () => {
     const { user, showSideBar } = useSelector((state) => state.auth)
@@ -73,23 +74,17 @@ const Sidebar = () => {
                             <span>Manage Groups</span>
                         </a>
                     </li>
-                    <li>
+                    <li onClick={(e) => {
+                        e.preventDefault()
+                        navigate("/notifications")
+                        dispatch(setShowsidebar())
+                    }}>
                         <a
                             href="javascript:void(0)"
-                            className="text-white text-[15px] font-normal flex items-center hover:bg-gray-700 rounded px-4 py-2 transition-all"
+                            className="text-white text-[15px] font-normal flex justify-start gap-2 items-center hover:bg-gray-700 rounded px-4 py-2 transition-all"
                         >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="currentColor"
-                                className="w-4.5 h-4.5 mr-3"
-                                viewBox="0 0 511.414 511.414"
-                            >
-                                <path
-                                    d="M497.695 108.838a16.002 16.002 0 0 0-9.92-14.8L261.787 1.2a16.003 16.003 0 0 0-12.16 0L23.639 94.038a16 16 0 0 0-9.92 14.8v293.738a16 16 0 0 0 9.92 14.8l225.988 92.838a15.947 15.947 0 0 0 12.14-.001c.193-.064-8.363 3.445 226.008-92.837a16 16 0 0 0 9.92-14.8zm-241.988 76.886-83.268-34.207L352.39 73.016l88.837 36.495zm-209.988-51.67 71.841 29.513v83.264c0 8.836 7.164 16 16 16s16-7.164 16-16v-70.118l90.147 37.033v257.797L45.719 391.851zM255.707 33.297l55.466 22.786-179.951 78.501-61.035-25.074zm16 180.449 193.988-79.692v257.797l-193.988 79.692z"
-                                    data-original="#000000"
-                                />
-                            </svg>
-                            <span>Product</span>
+                            <FaBell className='text-2xl'/>
+                            <span>Notifications</span>
                         </a>
                     </li>
                     <li onClick={(e) => {
@@ -102,7 +97,7 @@ const Sidebar = () => {
                             className="text-white text-[15px] font-normal flex justify-start gap-2 items-center hover:bg-gray-700 rounded px-4 py-2 transition-all"
                         >
                            <TiGroupOutline className='text-2xl'/>
-                            <span>Your Groups</span>
+                            <span>Manage Groups</span>
                         </a>
                     </li>
                     <li onClick={(e) => {
@@ -144,6 +139,20 @@ const Sidebar = () => {
                         >
                             <GrResources className='text-2xl' />
                             <span>Resources</span>
+                        </a>
+                    </li>
+
+                      <li onClick={(e) => {
+                        e.preventDefault()
+                        navigate("/user/resources")
+                        dispatch(setShowsidebar())
+                    }}>
+                        <a
+                            href="javascript:void(0)"
+                            className="text-white text-[15px] font-normal  flex gap-2 justify-start items-center hover:bg-gray-700 rounded px-4 py-2 transition-all"
+                        >
+                            <GrResources className='text-2xl' />
+                            <span> Manage Resources</span>
                         </a>
                     </li>
                 </ul>

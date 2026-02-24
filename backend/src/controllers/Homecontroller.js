@@ -11,6 +11,7 @@ export const getAllPosts = async (req, res) => {
 
     const query = {};
     query.groupid = null;
+    query.institute = req.user.institute;
     if (searchValue) query.content = { $regex: searchValue, $options: "i" };
 
     const posts = await Post.find(query)

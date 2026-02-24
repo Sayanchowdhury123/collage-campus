@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { setShowsidebar } from '../features/authslice'
 import { socket } from '../services/socket'
+import { hideNotification, showNotification } from '../features/SocketSlice'
 
 const Navbar = () => {
     const { user } = useSelector((state) => state.auth)
@@ -15,16 +16,25 @@ const Navbar = () => {
         }
     }, [user])
 
+useEffect(() => {
+  
+    const handleNewNotification = (notification) => {
+    
+      dispatch(showNotification(notification));
+      
+ 
+      setTimeout(() => {
+        dispatch(hideNotification());
+      }, 5000);
+    };
 
-    useEffect(() => {
+    socket.on("newNotification", handleNewNotification);
 
-        socket.on("newNotification", (notification) => {
-            console.log(notification)
-        })
-
-
-        return () => socket.off("newNotification")
-    }, [])
+  
+    return () => {
+      socket.off("newNotification", handleNewNotification);
+    };
+  }, [dispatch]);
 
 
     return (

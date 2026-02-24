@@ -12,7 +12,7 @@ const Home = () => {
   const { allposts, error, loading, h ,page} = useSelector((state) => state.home)
   const { user } = useSelector((state) => state.auth)
   const bottomref = useRef(null)
-  const [pageLoading, setPageLoading] = useState(false)
+  
 
   const dispatch = useDispatch()
 
@@ -41,8 +41,6 @@ useEffect(() => {
     }
   }, [loading, h])
 
-
-  if (pageLoading) return <Loadingscrenn />
 
   return (
     <div className='space-y-3 mt-25  '>
