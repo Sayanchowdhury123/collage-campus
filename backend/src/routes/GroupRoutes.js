@@ -3,11 +3,12 @@ import { Authmiddleware } from "../middleware/AuthMiddleware.js"
 import { BodyValidate, QueryValidate, validateParams } from "../middleware/validator.js"
 import { getGroupQuery, groupparam, groupzodschema } from "../Validators/GroupZod.js"
 import { getPagschema } from "../Validators/Commentzodschema.js"
-import { AddGroupPost, createGroup, delgroup, EditGroup, getadmingroups, getAllgroups, getGroupMemberCount, getgroupPosts, RemoveGroupPost, ToggleGroup } from "../controllers/GroupController.js"
+import { AddGroupPost, createGroup, delgroup, EditGroup, getadmingroups, getAllgroups, getGroupMemberCount, getgroupPosts, getUsergroups, RemoveGroupPost, ToggleGroup } from "../controllers/GroupController.js"
 import upload from "../middleware/upload.js"
 const router = express.Router()
 
 router.get("/admin",Authmiddleware,getadmingroups)
+router.get("/user",Authmiddleware,getUsergroups)
 router.get("/all",Authmiddleware,QueryValidate(getGroupQuery),getAllgroups)
 router.get("/details/:gid",Authmiddleware,validateParams(groupparam),getGroupMemberCount)
 router.get("/posts/:gid",Authmiddleware,validateParams(groupparam),getgroupPosts)

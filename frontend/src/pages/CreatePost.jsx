@@ -163,7 +163,7 @@ const CreatePost = ({ type }) => {
                                                 setPreviewAvatar(null);
                                                 setValue("cover", null);
                                             }}
-                                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs cursor-pointer"
                                         >
                                             ×
                                         </button>
@@ -216,7 +216,7 @@ const CreatePost = ({ type }) => {
                                     whileTap={{ scale: 0.98 }}
                                     type="submit"
                                     disabled={loading}
-                                    className={`w-full py-3 px-4 rounded-lg font-semibold text-white transition-all shadow-md ${loading
+                                    className={`w-full  py-3 px-4 rounded-lg cursor-pointer font-semibold text-white transition-all shadow-md ${loading
                                         ? "bg-indigo-400 cursor-not-allowed"
                                         : "bg-indigo-600 hover:bg-indigo-700"
                                         }`}
@@ -236,7 +236,7 @@ const CreatePost = ({ type }) => {
                                     whileTap={{ scale: 0.98 }}
                                     type="submit"
                                     disabled={loading}
-                                    className={`w-full py-3 px-4 rounded-lg font-semibold text-white transition-all shadow-md ${loading
+                                    className={`w-full cursor-pointer py-3 px-4 rounded-lg font-semibold text-white transition-all shadow-md ${loading
                                         ? "bg-indigo-400 cursor-not-allowed"
                                         : "bg-indigo-600 hover:bg-indigo-700"
                                         }`}

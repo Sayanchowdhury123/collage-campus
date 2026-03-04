@@ -97,7 +97,7 @@ const ExploreGrp = () => {
                     <p className="text-gray-600 line-clamp-2">{g.description}</p>
 
 
-                    <div className="flex gap-3 mt-4">
+                    <div className="flex gap-3 mt-4 cursor-pointer">
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}

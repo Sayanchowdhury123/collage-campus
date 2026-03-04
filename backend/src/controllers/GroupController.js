@@ -274,9 +274,11 @@ export const getAllgroups = async (req, res) => {
         }
       : {};
 
-      query.institute = req.user.institute;
+    query.institute = req.user.institute;
 
-    const groups = await Group.find(query).sort(sortObj).populate("admin", "name image");
+    const groups = await Group.find(query)
+      .sort(sortObj)
+      .populate("admin", "name image");
 
     if (!groups) {
       return res.status(400).json({ msg: "groups not found" });
@@ -297,6 +299,30 @@ export const getadmingroups = async (req, res) => {
   try {
     const groups = await Group.find({
       admin: req.user._id,
+    }).populate("admin", "name image");
+
+    if (!groups) {
+      return res.status(400).json({ msg: "groups not found" });
+    }
+
+    res.status(200).json({
+      groups,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
+export const getUsergroups = async (req, res) => {
+  try {
+    const userid = req.user._id;
+
+    const groups = await Group.find({
+      institute: req.user.institute,
+      members: userid,
     }).populate("admin", "name image");
 
     if (!groups) {

@@ -31,6 +31,7 @@ import ResourceDetails from './pages/ResourceDetails'
 import PublicLayout from './components/PublicLayout'
 import PrivateLayout from './components/PrivateLayout'
 import Notifcations from './pages/Notifcations'
+import YourGroups from './pages/YourGroups'
 
 
 function App() {
@@ -72,6 +73,7 @@ function App() {
               <Route path='/resource/details/:resourceid' element={<PrivateLayout><ResourceDetails /></PrivateLayout>} />
               <Route path='/user/resources' element={<PrivateLayout><YourResource /></PrivateLayout>} />
               <Route path='/notifications' element={<PrivateLayout><Notifcations/></PrivateLayout>} />
+              <Route path='/user/groups' element={<PrivateLayout><YourGroups/></PrivateLayout>}  />
             </Route>
 
 

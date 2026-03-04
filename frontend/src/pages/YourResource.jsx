@@ -57,7 +57,7 @@ const YourResource = () => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => navigate("/resource/add")}
-                        className="px-5 py-2.5 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors shadow-md"
+                        className=" cursor-pointer px-5 py-2.5 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors shadow-md"
                     >
                         Create Resource
                     </motion.button>
@@ -126,10 +126,10 @@ const YourResource = () => {
                                                         <span>📥 {resource.downloads || 0} downloads</span>
                                                         <span>👍 {resource.upvotes?.length || 0} upvotes</span>
                                                     </div>
-                                             <div className='flex items-center gap-4'>
+                                             <div className='flex items-center gap-4 '>
                                                  <button
                                                  onClick={() => navigate(`/resource/details/${resource._id}`)}
-                                                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                                                    className=" cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                                                 >
                                                     Details
                                                 </button>
@@ -137,14 +137,14 @@ const YourResource = () => {
                                                      onClick={() => navigate(`/resource/add`,{
                                                         state:{resource}
                                                      })}
-                                                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                                                        className="bg-green-600 cursor-pointer hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                                                     >
                                                         Update
                                                     </button>
 
                                                      <button
                                                      onClick={() => handledelete(resource._id)}
-                                                        className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                                                        className="bg-red-600 cursor-pointer hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                                                     >
                                                         Delete
                                                     </button>

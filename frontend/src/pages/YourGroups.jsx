@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { fetchgroups, togglegrp } from '../features/GroupSlice'
+import { fetchgroups, fetchUsergroups, togglegrp } from '../features/GroupSlice'
 import { useRef } from 'react'
 import { motion } from 'framer-motion'
 import Loadingscrenn from '../components/Loadingscrenn'
@@ -13,9 +13,9 @@ import toast from 'react-hot-toast'
 import { fetchProfile } from '../features/profileSlice'
 
 
-const Groups = () => {
+const YourGroups = () => {
     const navigate = useNavigate()
-    const { groups, h, loading, showDeleteModal, deleteGrpId } = useSelector((state) => state.group)
+    const { userGroups, h, loading, showDeleteModal, deleteGrpId } = useSelector((state) => state.group)
     const dispatch = useDispatch()
     const { data } = useSelector((state) => state.profile);
     const { user } = useSelector((state) => state.auth);
@@ -24,7 +24,7 @@ const Groups = () => {
 
 
     useEffect(() => {
-        dispatch(fetchgroups())
+        dispatch(fetchUsergroups())
 
 
     }, [user.id])
@@ -32,6 +32,7 @@ const Groups = () => {
 
 
     if (loading) return <Loadingscrenn />
+
     return (
         <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 ">
             <div className="max-w-4xl mx-auto mt-20">
@@ -42,30 +43,21 @@ const Groups = () => {
                     className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4"
                 >
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">Manage Groups</h1>
-                        <p className="mt-1 text-gray-600">
-                            Manage your campus communities and collaborations
-                        </p>
+                        <h1 className="text-3xl font-bold text-gray-900">Your Groups</h1>
+                       
                     </div>
 
-                    <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => navigate("/add/group")}
-                        className="px-5 py-2.5 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors shadow-md"
-                    >
-                        Create Group
-                    </motion.button>
+                   
                 </motion.div>
 
 
-                {groups?.length > 0 ? (
+                {userGroups?.length > 0 ? (
                     <div className='h-[80vh]'>
                         <motion.div
 
                             className="grid grid-cols-1  lg:grid-cols-2 gap-6  overflow-y-scroll " style={{ scrollbarWidth: "none" }}
                         >
-                            {groups.map((g) => (
+                            {userGroups.map((g) => (
                                 <motion.div
                                     key={g._id}
                                     layout
@@ -98,40 +90,23 @@ const Groups = () => {
 
 
                                         <div className="flex gap-3 mt-4 ">
-                                            {g?.admin?._id === user?.id && (
-                                                <>
+
+                                            <>
 
 
-                                                    <motion.button
-                                                        whileHover={{ scale: 1.05 }}
-                                                        whileTap={{ scale: 0.95 }}
-                                                        className="flex-1 px-3 py-2 cursor-pointer bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors text-sm font-medium"
-                                                        onClick={() => dispatch(openDeleteModal(g?._id))}
-                                                    >
-                                                        Delete
-                                                    </motion.button>
-                                                    <motion.button
-                                                        whileHover={{ scale: 1.05 }}
-                                                        whileTap={{ scale: 0.95 }}
-                                                        className="flex-1 px-3 py-2 bg-blue-50 cursor-pointer text-blue-700 rounded-lg hover:bg-blue-100 transition-colors text-sm font-medium"
-                                                        onClick={() => navigate("/add/group", {
-                                                            state: { g }
-                                                        })}
-                                                    >
-                                                        Edit
-                                                    </motion.button>
 
-                                                    <motion.button
-                                                        whileHover={{ scale: 1.05 }}
-                                                        whileTap={{ scale: 0.95 }}
-                                                        className="flex-1 px-3 py-2 bg-green-50 cursor-pointer text-green-700 rounded-lg hover:bg-green-100 transition-colors text-sm font-medium"
-                                                        onClick={() => navigate(`/group/${g._id}`)}
-                                                    >
-                                                        more details
-                                                    </motion.button>
 
-                                                </>
-                                            )}
+                                                <motion.button
+                                                    whileHover={{ scale: 1.05 }}
+                                                    whileTap={{ scale: 0.95 }}
+                                                    className="flex-1 px-3 py-2 cursor-pointer bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors text-sm font-medium"
+                                                    onClick={() => navigate(`/group/${g._id}`)}
+                                                >
+                                                    more details
+                                                </motion.button>
+
+                                            </>
+
 
 
 
@@ -173,27 +148,17 @@ const Groups = () => {
                         <p className="text-gray-600 max-w-md mx-auto">
                             Create your first group to collaborate with classmates on projects, events, or study sessions.
                         </p>
-                        <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => navigate("/add/group")}
-                            className="mt-6 px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors"
-                        >
-                            Create Your First Group
-                        </motion.button>
+
                     </motion.div>
                 )}
 
 
 
-                {showDeleteModal && (<DeleteGrpModal />)}
+
 
             </div>
         </div>
     )
 }
 
-export default Groups
-
-
-
+export default YourGroups;

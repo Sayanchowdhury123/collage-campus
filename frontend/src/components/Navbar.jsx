@@ -4,11 +4,20 @@ import { useNavigate } from 'react-router-dom'
 import { setShowsidebar } from '../features/authslice'
 import { socket } from '../services/socket'
 import { hideNotification, showNotification } from '../features/SocketSlice'
+import { fetchProfile } from '../features/profileSlice'
 
 const Navbar = () => {
     const { user } = useSelector((state) => state.auth)
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const { data } = useSelector((state) => state.profile)
+  
+    useEffect(() => {
+        if (user?.id) {
+            dispatch(fetchProfile(user?.id));
+
+        }
+    }, [dispatch, user?.id]);
 
     useEffect(() => {
         if (user?.id) {
@@ -16,25 +25,25 @@ const Navbar = () => {
         }
     }, [user])
 
-useEffect(() => {
-  
-    const handleNewNotification = (notification) => {
-    
-      dispatch(showNotification(notification));
-      
- 
-      setTimeout(() => {
-        dispatch(hideNotification());
-      }, 5000);
-    };
+    useEffect(() => {
 
-    socket.on("newNotification", handleNewNotification);
+        const handleNewNotification = (notification) => {
 
-  
-    return () => {
-      socket.off("newNotification", handleNewNotification);
-    };
-  }, [dispatch]);
+            dispatch(showNotification(notification));
+
+
+            setTimeout(() => {
+                dispatch(hideNotification());
+            }, 5000);
+        };
+
+        socket.on("newNotification", handleNewNotification);
+
+
+        return () => {
+            socket.off("newNotification", handleNewNotification);
+        };
+    }, [dispatch]);
 
 
     return (
@@ -49,11 +58,11 @@ useEffect(() => {
                 <div className="flex gap-2">
 
                     <div className="dropdown dropdown-end">
-                        <div role="button" className="btn btn-ghost btn-circle avatar" onClick={() => dispatch(setShowsidebar())}>
+                        <div role="button" className="btn cursor-pointer btn-ghost btn-circle avatar" onClick={() => dispatch(setShowsidebar())}>
                             <div className="w-10 rounded-full">
                                 <img
                                     alt="Tailwind CSS Navbar component"
-                                    src={user ? user.image : "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"} />
+                                    src={data ? data?.image : "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"} />
                             </div>
                         </div>
 

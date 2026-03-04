@@ -95,7 +95,7 @@ const Comments = ({ postid, post }) => {
             whileTap={{ scale: 0.95 }}
             onClick={isEdit ? edit : add}
             disabled={!text.trim()}
-            className={`px-5 py-2.5 rounded-lg font-medium transition-colors ${!text.trim()
+            className={`px-5 py-2.5 cursor-pointer rounded-lg font-medium transition-colors ${!text.trim()
               ? "bg-gray-200 text-gray-500 cursor-not-allowed"
               : "bg-indigo-600 text-white hover:bg-indigo-700"
               }`}
@@ -147,7 +147,7 @@ const Comments = ({ postid, post }) => {
                             setText(c.message);
                             setisEdit(true);
                           }}
-                          className="flex items-center gap-1 text-sm text-gray-600 hover:text-blue-600 transition-colors"
+                          className="flex cursor-pointer items-center gap-1 text-sm text-gray-600 hover:text-blue-600 transition-colors"
                         >
                           <CiEdit />
                           Edit
@@ -157,7 +157,7 @@ const Comments = ({ postid, post }) => {
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                           onClick={() => del(c._id)}
-                          className="flex items-center gap-1 text-sm text-gray-600 hover:text-red-600 transition-colors"
+                          className="flex cursor-pointer items-center gap-1 text-sm text-gray-600 hover:text-red-600 transition-colors"
                         >
                           <MdDelete />
                           Delete

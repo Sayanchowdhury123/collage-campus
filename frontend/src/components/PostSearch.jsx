@@ -32,7 +32,7 @@ const PostSearch = () => {
         >
             <div className="flex items-center justify-between">
 
-                <div className="mb-6">
+                <div className="">
                     <label htmlFor="post-search" className="block text-sm font-medium text-gray-700 mb-2">
                         Search Posts
                     </label>
@@ -63,7 +63,7 @@ const PostSearch = () => {
                 </div>
 
                 
-                <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                <div className="flex flex-col sm:flex-row gap-2 items-start sm:items-center">
                     <label className="block text-sm font-medium text-gray-700 whitespace-nowrap">
                         Sort by:
                     </label>

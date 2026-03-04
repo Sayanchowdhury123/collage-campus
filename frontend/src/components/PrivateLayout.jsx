@@ -36,7 +36,7 @@ const PrivateLayout = ({ children }) => {
                     </div>
                     <button
                         onClick={handleSeeClick}
-                        className="btn btn-sm btn-ghost"
+                        className="btn btn-sm btn-ghost cursor-pointer"
                     >
                         See
                     </button>

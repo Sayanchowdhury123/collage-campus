@@ -11,6 +11,7 @@ import { BsFiletypeTxt } from "react-icons/bs";
 import { CiImageOn } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 import ResourceSearch from "../components/ResourceSearch";
+import { socket } from "../services/socket";
 
 
 const ResourceList = () => {
@@ -19,6 +20,8 @@ const ResourceList = () => {
     const bottomref = useRef(null)
     const filters = {}
     const navigate = useNavigate()
+    const {user} = useSelector((state) => state.auth)
+    console.log(user)
 
     useEffect(() => {
         dispatch(resetResources());
@@ -47,6 +50,8 @@ const ResourceList = () => {
             if (bottomref.current) observer.unobserve(bottomref.current)
         }
     }, [loading, hasMore])
+
+
 
     if (error) return <div className="text-red-500 text-center py-4">{error}</div>;
 
@@ -131,7 +136,7 @@ const ResourceList = () => {
 
                                                 <button
                                                  onClick={() => navigate(`/resource/details/${resource._id}`)}
-                                                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                                                    className="cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                                                 >
                                                     Details
                                                 </button>
@@ -162,7 +167,7 @@ const ResourceList = () => {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => navigate("/resource/add")}
-                            className="mt-6 px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors"
+                            className="mt-6 cursor-pointer px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors"
                         >
                             Upload Resource
                         </motion.button>

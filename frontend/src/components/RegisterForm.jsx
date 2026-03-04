@@ -83,7 +83,7 @@ export default function RegisterForm() {
 
 
 
-                    <button disabled={isSubmitting} type="submit" className="flex items-center justify-center gap-1 mt-5 bg-indigo-500 hover:bg-indigo-600 text-white py-2.5 w-full rounded-full transition">
+                    <button disabled={isSubmitting} type="submit" className="flex cursor-pointer items-center justify-center gap-1 mt-5 bg-indigo-500 hover:bg-indigo-600 text-white py-2.5 w-full rounded-full transition">
                         {isSubmitting ? "Registering..." : "Register"}
                     </button>
 

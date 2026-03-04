@@ -22,6 +22,7 @@ const initialState = {
   postloading: false,
   groupPosts: [],
   pageloading: false,
+  userGroups: [],
 };
 
 export const fetchgroups = createAsyncThunk(
@@ -29,6 +30,22 @@ export const fetchgroups = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await api.get(`/group/admin`);
+
+      return {
+        groups: response.data.groups,
+      };
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error || "Failed to load posts");
+    }
+  },
+);
+
+export const fetchUsergroups = createAsyncThunk(
+  "group/fetchUsergroups",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/group/user`);
 
       return {
         groups: response.data.groups,
@@ -183,6 +200,23 @@ const GroupSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder
+      .addCase(fetchUsergroups.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchUsergroups.fulfilled, (state, action) => {
+        const { groups } = action.payload;
+
+        state.userGroups = groups;
+
+        state.loading = false;
+      })
+      .addCase(fetchUsergroups.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+
     builder
       .addCase(fetchGrpPosts.pending, (state) => {
         state.pageloading = true;

@@ -281,7 +281,7 @@ const ResourceUpload = () => {
                             whileTap={{ scale: 0.98 }}
                             type="submit"
                             disabled={loading}
-                            className={`w-full py-3 px-4 rounded-lg font-semibold text-white transition-all shadow-md ${loading
+                            className={`w-full py-3 px-4 rounded-lg  cursor-pointer font-semibold text-white transition-all shadow-md ${loading
                                 ? "bg-indigo-400 cursor-not-allowed"
                                 : "bg-indigo-600 hover:bg-indigo-700"
                                 }`}

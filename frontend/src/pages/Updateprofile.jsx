@@ -78,7 +78,7 @@ export default function EditProfilePage() {
 
         if (updateProfile.fulfilled.match(result)) {
             toast.success("Profile updated!");
-            navigate("/profile");
+            navigate(`/profile/${user.id}`);
         } else {
             toast.error(result.payload || "Update failed");
         }
@@ -182,7 +182,7 @@ export default function EditProfilePage() {
                             whileTap={{ scale: 0.98 }}
                             type="submit"
                             disabled={loading}
-                            className={`w-full py-2 px-4 rounded-md text-white ${loading ? "bg-gray-400" : "bg-indigo-600 hover:bg-indigo-700"
+                            className={`w-full cursor-pointer py-2 px-4 rounded-md text-white ${loading ? "bg-gray-400" : "bg-indigo-600 hover:bg-indigo-700"
                                 } transition`}
                         >
                             {loading ? "Saving..." : "Save Changes"}

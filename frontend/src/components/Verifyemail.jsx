@@ -31,7 +31,7 @@ const Verifyemail = () => {
             <div className="min-w-100   bg-base-300 rounded-sm   text-center">
                 <div className="p-10">
                     <p className="text-xl font-semibold">Email verification successfull</p>
-                    <button onClick={() => navigate("/login")} className=" btn btn-accent mt-2">Go To Login</button>
+                    <button onClick={() => navigate("/login")} className="cursor-pointer btn btn-accent mt-2">Go To Login</button>
                 </div>
 
             </div>

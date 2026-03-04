@@ -64,7 +64,7 @@ export default function DeleteModal() {
                             className="border-t dark:border-gray-700 px-2"
                         />
                         <div className="px-6 py-2">
-                            <div className="grid gap-2 grid-cols-[repeat(auto-fit,minmax(0,1fr))]">
+                            <div className="grid gap-2 cursor-pointer grid-cols-[repeat(auto-fit,minmax(0,1fr))]">
 
 
                                 <button

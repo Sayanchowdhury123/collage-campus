@@ -83,14 +83,14 @@ const PostManage = () => {
 
 
 
-                                    <div className="flex gap-3 mt-4 pt-4 border-t border-gray-100">
+                                    <div className="flex gap-3 mt-4 pt-4 border-t border-gray-100 ">
                                         <motion.button
                                             whileHover={{ scale: 1.05 }}
                                             whileTap={{ scale: 0.95 }}
                                             onClick={() =>
                                                 navigate("/update/post", { state: { post: p } })
                                             }
-                                            className="flex items-center gap-2 px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors"
+                                            className="flex cursor-pointer items-center gap-2 px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors"
                                         >
                                             <CiEdit className="text-lg" />
                                             <span>Edit</span>
@@ -100,7 +100,7 @@ const PostManage = () => {
                                             whileHover={{ scale: 1.05 }}
                                             whileTap={{ scale: 0.95 }}
                                             onClick={() => dispatch(openDeleteModal(p._id))}
-                                            className="flex items-center gap-2 px-3 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors"
+                                            className="flex cursor-pointer items-center gap-2 px-3 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors"
                                         >
                                             <MdDelete className="text-lg" />
                                             <span>Delete</span>
@@ -140,7 +140,7 @@ const PostManage = () => {
                             whileHover={{ scale: 1.03 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={() => navigate("/create/post")}
-                            className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                            className="mt-4 cursor-pointer px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
                         >
                             Create Your First Post
                         </motion.button>
