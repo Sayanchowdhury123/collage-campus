@@ -3,7 +3,7 @@ import { store } from "./app/store";
 
 
 const api = axios.create({
-    baseURL: `http://localhost:9000`,
+    baseURL: `${import.meta.env.VITE_API_URL}`,
   
 })
 
