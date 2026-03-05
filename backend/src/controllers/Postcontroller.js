@@ -1,6 +1,7 @@
 import Post from "../models/Post.js";
 import { CoverUplaodToCloudinary } from "../config/cloudinary.js";
 import cloudinary from "../config/cloudinary.js";
+import logger from "../utils/logger.js";
 
 export const addPost = async (req, res) => {
   try {
@@ -22,7 +23,7 @@ export const addPost = async (req, res) => {
       message: "post created",
     });
   } catch (error) {
-    console.log(error);
+      logger.error(error);
     return res.status(500).json({
       message: "Internal server error",
     });
@@ -78,7 +79,7 @@ export const editPost = async (req, res) => {
       message: "post updated",
     });
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     return res.status(500).json({
       message: "Internal server error",
     });
@@ -114,7 +115,7 @@ export const delpost = async (req, res) => {
 
     res.status(204).end();
   } catch (error) {
-    console.log(error);
+      logger.error(error);
     return res.status(500).json({
       message: "Internal server error",
     });
@@ -150,7 +151,7 @@ export const getUserPosts = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log(error);
+      logger.error(error);
     return res.status(500).json({
       message: "Internal server error",
     });
@@ -179,7 +180,7 @@ export const ToggleLike = async (req, res) => {
       .status(200)
       .json({ mesage: "like operation completed", likes: post.likes });
   } catch (error) {
-    console.log(error);
+      logger.error(error);
     return res.status(500).json({
       message: "Internal server error",
     });

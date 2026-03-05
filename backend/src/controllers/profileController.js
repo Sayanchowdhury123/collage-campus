@@ -2,6 +2,7 @@ import User from "../models/User.js";
 import cloudinary from "../config/cloudinary.js";
 import { uploadToCloudinary } from "../config/cloudinary.js";
 import { isValidObjectId } from "mongoose";
+import logger from "../utils/logger.js";
 
 export const getprofile = async (req, res) => {
   const { id } = req.params;
@@ -95,7 +96,7 @@ export const EditProfile = async (req, res) => {
       message: " profile updated",
     });
   } catch (error) {
-    console.log(error);
+      logger.error(error);
     return res.status(500).json({
       message: "Internal server error",
     });

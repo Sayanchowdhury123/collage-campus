@@ -12,6 +12,7 @@ import ResourceRoutes from "./routes/ResourceRoutes.js";
 import http from "http";
 import { Server } from "socket.io";
 import Notification from "./models/Notification.js";
+import logger from "./utils/logger.js";
 
 const app = express();
 app.use(express.json());
@@ -41,11 +42,11 @@ const io = new Server(server, {
 const OnlineUsers = new Map();
 
 io.on("connection", (socket) => {
-  console.log("socket connected");
+  logger.info("socket connected");
 
   socket.on("addUser", (userid) => {
     OnlineUsers.set(userid, socket.id);
-    console.log(`${userid} connected`);
+    logger.info(`${userid} connected`);
   });
 
   socket.on("sendNotification", async (data) => {
@@ -76,5 +77,5 @@ io.on("connection", (socket) => {
 });
 
 server.listen(PORT, () => {
-  console.info(`server runnig on ${process.env.PORT} port`);
+  logger.info(`server runnig on ${process.env.PORT} port`);
 });

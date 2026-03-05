@@ -4,6 +4,7 @@ import cloudinary, {
   uploadResourceToCloudinary,
 } from "../config/cloudinary.js";
 import Notification from "../models/Notification.js";
+import logger from "../utils/logger.js";
 
 const getResourceType = (mimetype) => {
   const mimeMap = {
@@ -317,7 +318,7 @@ export const ResourceDetails = async (req, res) => {
       data,
     });
   } catch (error) {
-    console.log(error);
+      logger.error(error);
     return res.status(500).json({
       message: "Internal server error",
     });
@@ -343,7 +344,7 @@ export const unique = async (req, res) => {
       courses: uniqueCourses,
     });
   } catch (error) {
-    console.log(error);
+      logger.error(error);
     return res.status(500).json({
       message: "Internal server error",
     });
@@ -376,7 +377,7 @@ export const getNotifications = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log(error);
+      logger.error(error);
     return res.status(500).json({
       message: "Internal server error",
     });

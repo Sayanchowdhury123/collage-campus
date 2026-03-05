@@ -2,6 +2,7 @@ import userSchema from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { Verifymail } from "../config/verifyEmail.js";
+import logger from "../utils/logger.js";
 
 export const register = async (req, res) => {
   try {
@@ -95,7 +96,7 @@ export const verifyToken = async (req, res) => {
       }
     });
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     return res.status(500).json({
       success: false,
       message: "Could not access",

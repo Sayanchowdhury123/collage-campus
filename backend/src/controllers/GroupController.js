@@ -6,6 +6,7 @@ import cloudinary, {
 import Group from "../models/Group.js";
 import Post from "../models/Post.js";
 import User from "../models/User.js";
+import logger from "../utils/logger.js";
 
 export const createGroup = async (req, res) => {
   try {
@@ -30,7 +31,7 @@ export const createGroup = async (req, res) => {
       message: "Group created",
     });
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     return res.status(500).json({
       message: "Internal server error",
     });
@@ -91,7 +92,7 @@ export const EditGroup = async (req, res) => {
       message: "group updated",
     });
   } catch (error) {
-    console.log(error);
+      logger.error(error);
     return res.status(500).json({
       message: "Internal server error",
     });
@@ -129,7 +130,7 @@ export const delgroup = async (req, res) => {
 
     res.status(204).end();
   } catch (error) {
-    console.log(error);
+      logger.error(error);
     return res.status(500).json({
       message: "Internal server error",
     });
@@ -185,7 +186,7 @@ export const ToggleGroup = async (req, res) => {
       updated: group,
     });
   } catch (error) {
-    console.error("ToggleGroup error:", error);
+      logger.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -210,7 +211,7 @@ export const AddGroupPost = async (req, res) => {
     await post.save();
     res.json({ message: "Post added to group", post });
   } catch (error) {
-    console.error("AddGroupPost error:", error);
+      logger.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -250,7 +251,7 @@ export const RemoveGroupPost = async (req, res) => {
     await Post.findByIdAndDelete(postid);
     res.status(200).json({ message: "group post deleted" });
   } catch (error) {
-    console.log(error);
+      logger.error(error);
     return res.status(500).json({
       message: "Internal server error",
     });
@@ -288,7 +289,7 @@ export const getAllgroups = async (req, res) => {
       groups,
     });
   } catch (error) {
-    console.log(error);
+      logger.error(error);
     return res.status(500).json({
       message: "Internal server error",
     });
@@ -309,7 +310,7 @@ export const getadmingroups = async (req, res) => {
       groups,
     });
   } catch (error) {
-    console.log(error);
+      logger.error(error);
     return res.status(500).json({
       message: "Internal server error",
     });
@@ -333,7 +334,7 @@ export const getUsergroups = async (req, res) => {
       groups,
     });
   } catch (error) {
-    console.log(error);
+      logger.error(error);
     return res.status(500).json({
       message: "Internal server error",
     });
@@ -343,7 +344,7 @@ export const getUsergroups = async (req, res) => {
 export const getGroupMemberCount = async (req, res) => {
   try {
     const { gid } = req.validatedParams;
-    console.log(gid);
+    
     if (!mongoose.isValidObjectId(gid)) {
       return res.status(400).json({ message: "Invalid group ID" });
     }
@@ -355,7 +356,7 @@ export const getGroupMemberCount = async (req, res) => {
 
     res.json({ grp: details });
   } catch (error) {
-    console.error("Get member count error:", error);
+     logger.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };

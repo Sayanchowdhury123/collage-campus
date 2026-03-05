@@ -1,5 +1,6 @@
 import Comment from "../models/Comment.js";
 import Post from "../models/Post.js";
+import logger from "../utils/logger.js";
 
 export const getAllPosts = async (req, res) => {
   try {
@@ -36,7 +37,7 @@ export const getAllPosts = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log(error);
+      logger.error(error);
     return res.status(500).json({
       message: "Internal server error",
     });
@@ -59,7 +60,7 @@ export const getDetailed = async (req, res) => {
       post,
     });
   } catch (error) {
-    console.log(error);
+      logger.error(error);
     return res.status(500).json({
       message: "Internal server error",
     });
@@ -83,7 +84,7 @@ export const newComment = async (req, res) => {
       .status(201)
       .json({ message: "new comment added", comment: newComment });
   } catch (error) {
-    console.log(error);
+      logger.error(error);
     return res.status(500).json({
       message: "Internal server error",
     });
@@ -115,7 +116,7 @@ export const Editcomment = async (req, res) => {
 
     return res.status(200).json({ message: "comment updayed", comment });
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     return res.status(500).json({
       message: "Internal server error",
     });
@@ -135,7 +136,7 @@ export const delcomment = async (req, res) => {
 
     return res.status(204).end();
   } catch (error) {
-    console.log(error);
+      logger.error(error);
     return res.status(500).json({
       message: "Internal server error",
     });
@@ -159,7 +160,7 @@ export const getComments = async (req, res) => {
       comments,
     });
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     return res.status(500).json({
       message: "Internal server error",
     });
